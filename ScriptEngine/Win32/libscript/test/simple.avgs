@@ -1,0 +1,17 @@
+dim a# 
+dim b#
+dim c#
+dim d#
+a#=1.0
+b#=2.0
+c#=3.0
+gosub newcreat
+print "d=(c*(a+b)/8+9)*10 d="
+printr(d#)
+printv "hehe"
+end
+
+'sub function
+newcreat:
+	d#=(c#*(a#+b#)/8+9)*10
+return
