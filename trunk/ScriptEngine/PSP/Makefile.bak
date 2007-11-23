@@ -1,0 +1,13 @@
+TARGET_LIB = libbasic.a
+OBJS =  ../Src/VM/HasErrorState.o ../Src/VM/Misc.o ../Src/VM/TomVM.o ../Src/VM/vmCode.o ../Src/VM/vmData.o \
+	../Src/VM/vmDebugger.o ../Src/VM/vmFunction.o ../Src/VM/vmTypes.o ../Src/VM/vmVariables.o \
+	../Src/Compiler/compFunction.o ../Src/Compiler/compParse.o ../Src/Compiler/TomComp.o \
+	../Src/StdBasicLib/TomStdBasicLib.o
+INCDIR = 
+CFLAGS = -O2 -w
+CXXFLAGS = $(CFLAGS) -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+PSPSDK=$(shell psp-config --pspsdk-path)
+PSPBIN = $(PSPSDK)/../bin
+include $(PSPSDK)/lib/build.mak

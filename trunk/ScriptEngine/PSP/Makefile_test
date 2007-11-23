@@ -1,0 +1,18 @@
+TARGET = TestScript
+OBJS = 	main_psp.o  
+INCDIR = ../Include
+
+CFLAGS = -O2 -w -O2
+CXXFLAGS = $(CFLAGS) -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+LIBDIR =./
+LDFLAGS =
+LIBS += -lbasic -lg -lstdc++ -lm 
+
+EXTRA_TARGETS = EBOOT.PBP
+PSP_EBOOT_TITLE = AVGScript
+
+PSPSDK=$(shell psp-config --pspsdk-path)
+PSPBIN = $(PSPSDK)/../bin
+include $(PSPSDK)/lib/build.mak

@@ -1,0 +1,71 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: libscript - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\liu\LOCALS~1\Temp\RSP3A.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fp"Debug/libscript.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ  /c 
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\Compiler\compFunction.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\Compiler\compParse.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\Compiler\TomComp.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\HasErrorState.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\Misc.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\Streaming.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\TomVM.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\vmCode.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\vmData.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\vmDebugger.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\vmFunction.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\vmTypes.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\VM\vmVariables.cpp"
+"J:\b4sdl-0.1\b4sdl\Source\ProjectA\ScriptEngine\Src\StdBasicLib\TomStdBasicLib.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\liu\LOCALS~1\Temp\RSP3A.tmp" 
+Creating temporary file "C:\DOCUME~1\liu\LOCALS~1\Temp\RSP3B.tmp" with contents
+[
+/nologo /out:"../../lib/libscript.lib" 
+".\Debug\compFunction.obj"
+".\Debug\compParse.obj"
+".\Debug\TomComp.obj"
+".\Debug\HasErrorState.obj"
+".\Debug\Misc.obj"
+".\Debug\Streaming.obj"
+".\Debug\TomVM.obj"
+".\Debug\vmCode.obj"
+".\Debug\vmData.obj"
+".\Debug\vmDebugger.obj"
+".\Debug\vmFunction.obj"
+".\Debug\vmTypes.obj"
+".\Debug\vmVariables.obj"
+".\Debug\TomStdBasicLib.obj"
+]
+Creating command line "link.exe -lib @C:\DOCUME~1\liu\LOCALS~1\Temp\RSP3B.tmp"
+<h3>Output Window</h3>
+Compiling...
+compFunction.cpp
+compParse.cpp
+TomComp.cpp
+HasErrorState.cpp
+Misc.cpp
+Streaming.cpp
+TomVM.cpp
+vmCode.cpp
+vmData.cpp
+vmDebugger.cpp
+vmFunction.cpp
+vmTypes.cpp
+vmVariables.cpp
+TomStdBasicLib.cpp
+Creating library...
+
+
+
+<h3>Results</h3>
+libscript.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>
