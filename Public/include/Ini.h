@@ -1,8 +1,9 @@
 //********************************************
+//  project : avgscript
 //	filename: Ini.h
 //  author:   sgch1982@gmail.com 
 //  date:     2007.11
-//  
+//  descript: ini utility  
 //********************************************
 
 #ifndef _INI_H_
