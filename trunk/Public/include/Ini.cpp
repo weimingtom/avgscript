@@ -133,6 +133,7 @@ int  CIni::FindIndex(const char* pszIndex)
 			}
 			else if( m_pData[j]==']')	//succeed, then compare with pszIndex
 			{
+				memset(szIndex,0,sizeof(szIndex));
 				memcpy(szIndex, &m_pData[i+1], j-i-1);
 				szIndex[j-i-1]='\0';
 				if(strcmp(pszIndex, szIndex) == 0)
@@ -174,7 +175,10 @@ int  CIni::FindKey(const char* pszKey, int nStartPos)
 		}
 		else if ( m_pData[j]=='=')	//find '=' , 
 		{
+			memset(szKey,0,sizeof(szKey));
 			memcpy(szKey, &m_pData[i], j-i);
+
+			TrimSpace(szKey);
 			if( strcmp(szKey, pszKey)==0)
 				return j;
 			else
@@ -198,7 +202,7 @@ bool CIni::GetValue(int nPos,char* pszBuf, int nBufLen,int* pRet)
 	
 	int nStart = nPos+1;
 	int nEnd;
-	while (nPos!=m_nDateLen &&m_pData[nPos]!='\n' && m_pData[nPos]!=' ' )
+	while (nPos!=m_nDateLen &&m_pData[nPos]!='\n' )
 	{
 		nPos++;
 	}
@@ -216,6 +220,8 @@ bool CIni::GetValue(int nPos,char* pszBuf, int nBufLen,int* pRet)
 
 	nEnd = nPos-1;
 	memcpy(pszBuf, &m_pData[nStart], nEnd-nStart );
+	TrimSpace(pszBuf);
+
 	if(pRet)
 	{
 		*pRet= atoi(pszBuf);
@@ -223,3 +229,25 @@ bool CIni::GetValue(int nPos,char* pszBuf, int nBufLen,int* pRet)
 	return true;
 }
 
+void CIni::TrimSpace(char* pszBuf)
+{
+	if(pszBuf==NULL)
+		return;
+
+	int nLen= strlen(pszBuf);
+	char szBufTemp[MAX_VALUE_BUF_LEN]={0};
+
+	int i=0;
+	int j =0;
+	while(i< nLen )
+	{
+		if(pszBuf[i]!=' ')
+		{
+			szBufTemp[j] = pszBuf[i];
+			j++;
+		}
+		i++;
+	}
+	strcpy(pszBuf, szBufTemp);
+	
+}
