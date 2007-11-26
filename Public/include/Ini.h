@@ -11,9 +11,7 @@
 
 #include "def.h"
 
-#define MAX_KEY_LEN 128
-#define MAX_INDEX_LEN 128
-#define MAX_VALUE_BUF_LEN 256
+
 
 class CIni
 {
@@ -25,7 +23,9 @@ public:
 
 	
 	bool Open(const char* pszFileName);
+	bool IsOpen()	{return m_bOpen;}
 	int GetFileLength(const char *pszFileName);
+
 
 	//Get int key example: 
 	// [pszIndex]
@@ -39,6 +39,7 @@ public:
 	int  FindIndex(const char* pszIndex);
 	int  FindKey(const char* pszKey, int nStartPos=0);
 	bool GetValue(int nPos, char* pszBuf, int nBufLen,int* pRet=NULL);	
+	void TrimSpace(char* pszBuf);
 
 private:
 	bool		m_bOpen;
