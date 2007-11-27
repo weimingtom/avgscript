@@ -1,5 +1,19 @@
 #ifndef _IDRIVER_GU_H_
 #define _IDRIVER_GU_H_
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pspkernel.h>
+#include <pspdisplay.h>
+#include <pspdebug.h>
+#include <stdlib.h>
+#include <pspctrl.h>
+#include <pspgu.h>
+#include <pspgum.h>
+#include <psprtc.h>
+#include "IDriver.h"
+#include "vram.h"
+#include "SDL.h"
 #include "math_compatible.h"
 #include "datatype.h"
 
