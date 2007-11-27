@@ -1,5 +1,9 @@
 #ifndef _IDRIVER_OGL_H_
 #define _IDRIVER_OGL_H_
+#include <gl/glut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+#include <GL/glaux.h>
 #include "math_compatible.h"
 #include "datatype.h"
 
