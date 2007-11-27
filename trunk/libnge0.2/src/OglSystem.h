@@ -8,23 +8,27 @@
 #include "IDriver.h"
  
 /**
- *  a opengl implament of IVideoDriver.
+ *  opengl实现的IVideoDriver版本.
  */
 class COglSystem: public IVideoDriver
 {
 public:
 	/**
- 	 *  constructor.
-        */
+ 	 *  构造函数.
+         */
 	COglSystem();
-	virtual void BeginScene() ;
-	virtual void EndScene() ;
-	virtual void RenderQuad(CTexture* texture,float sx,float sy,float sw,float sh,float dx,
-			float dy,float xscale = 1.0,float yscale = 1.0,float angle = 0.0,int color=0xffffffff);
+	virtual void BeginScene(int flag);
+      	virtual void EndScene();
+      	virtual void RenderQuad(CTexture* texture,float sx,float sy,float sw,float sh,float dx,float dy,
 	virtual void RenderQuadFast(CTexture* texture,float dx,float dy);
- 	virtual CTexture* LoadTexture(const char* filename);
-	virtual void FpsInit();
-	virtual void ShowFps();
+        virtual void FpsInit();
+        virtual void ShowFps(); 
+        virtual void DrawLine(float x1, float y1, float x2, float y2, int color);
+        virtual void DrawLine(Cpointf p1, Cpointf p2, int color);
+        virtual void DrawRect(float x, float y, float width, float height,int color);
+        virtual void DrawRect(CRectf rect,int color);
+        virtual void FillRect(float x, float y, float width, float height,int color);
+        virtual void FillRect(CRectf rect,int color);
 protected:
 private:
 	int m_update;
