@@ -20,7 +20,7 @@ class CLineObjectList
 	void Push(CLineObject* object);
 	void Clear();
 	int  Size();
-	void SetShowFlag(int flag);
+	void SetShowFlag(int flag){ m_flag = flag; };
 private:
 	list<CLineObject*> m_linelist;
 	int  m_flag;	
@@ -40,7 +40,7 @@ class CRectObjectList
 	void Push(CRectObject* object);
 	void Clear();
 	int  Size();
-	void SetShowFlag(int flag);
+	void SetShowFlag(int flag){ m_flag = flag; };
 private:
 	list<CRectObject*> m_linelist;
 	int  m_flag;	
