@@ -78,7 +78,10 @@
  *  @brief make rgba .
  */
 #define RGBA(r,g,b,a) ((r)+((g)<<8)+((b)<<16)+((a)<<24))
-
+#define GET_COLOR_R(color) (color&0x000000ff)
+#define GET_COLOR_G(color) ((color>>8)&0x000000ff)
+#define GET_COLOR_B(color) ((color>>16)&0x000000ff)
+#define GET_COLOR_A(color) ((color>>24)&0x000000ff)
 
 /**
  *  @brief A type definition for point .
