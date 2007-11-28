@@ -148,7 +148,8 @@ public:
        
 	
 private:
-	int m_clrcolor;
+	int m_colorint;
+	color4f m_clrcolor;
 	int m_update;
 	int m_frame;
 	int m_t0;

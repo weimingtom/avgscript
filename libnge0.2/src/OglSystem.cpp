@@ -22,7 +22,7 @@ void COglSystem::BeginScene()
 	glClearColor( 0.0f, 0.0f, 0.0f, 0.5f );
 	glClear( GL_COLOR_BUFFER_BIT );
 	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    	glLoadIdentity();
 	glOrtho(0,480,272,0,-1, 1);
 	m_update = 0;
 }
