@@ -224,6 +224,22 @@ void CMap::Draw()
 
 }
 
+void CMap::ScrollMap(int nOffsetX,int nOffsetY)
+{
+	m_nDisplayLeft+=nOffsetX;
+	m_nDisplayTop+=nOffsetY;
+
+	if(m_nDisplayLeft<0)
+		m_nDisplayLeft=0;
+	if(m_nDisplayLeft +DISPLAY_WIDTH>m_nMapCols*CELL_SIZE)
+		m_nDisplayLeft = m_nMapCols*CELL_SIZE - DISPLAY_WIDTH;
+	if(m_nDisplayTop<0)
+		m_nDisplayTop=0;
+	if(m_nDisplayTop +DISPLAY_HEIGHT>m_nMapRows*CELL_SIZE)
+		m_nDisplayTop = m_nMapRows*CELL_SIZE - DISPLAY_HEIGHT;
+
+
+}
 
 #ifdef _TEST_
 void CMap::Test()
