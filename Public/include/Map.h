@@ -52,7 +52,7 @@ public:
 
 	bool Save(const char* pszFileName);
 	bool Load(const char* pszFileName);
-
+	void ScrollMap(int nOffsetX,int nOffsetY);
 
 #ifdef _TEST_
 	void Test();
