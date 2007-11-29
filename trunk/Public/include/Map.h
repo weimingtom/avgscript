@@ -29,6 +29,12 @@ struct stCell
 	unsigned char MouseType;	//鼠标类型
 	unsigned char CPType;		//陷阱类型
 	unsigned char res[4];		//保留
+
+
+	stCell()
+	{
+		memset(this, 0, sizeof(stCell));
+	}
 };	
 
 
@@ -44,14 +50,26 @@ public:
 	bool Init(IVideoDriver* pVideoDriver);
 	void Draw();
 
+	bool Save(const char* pszFileName);
+	bool Load(const char* pszFileName);
+
+
+#ifdef _TEST_
+	void Test();
+
+#endif
+
 private:
 	CTexture* m_pMapTextureArr[MAX_MAP_TEXTURE_NUM] ;
+	CTexture* m_pBackGroundTexture;
 	IVideoDriver* m_pVideoDriver;
 	CIni      m_ini;
 	stCell*   m_pCell;
 	int       m_nTextureCount;
-	int       m_nMapRows;
-	int       m_nMapCols;
+	int		  m_nMapRows;
+	int		  m_nMapCols;
+	int       m_nDisplayTop;		//display top 0 -> map y
+	int       m_nDisplayLeft;		//display Left 0-> map x
 };
 
 
