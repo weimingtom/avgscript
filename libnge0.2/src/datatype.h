@@ -83,6 +83,14 @@
 #define GET_COLOR_B(color) ((color>>16)&0x000000ff)
 #define GET_COLOR_A(color) ((color>>24)&0x000000ff)
 
+typedef struct{
+	float r;
+	float g;
+	float b;
+	flaot a;
+}color4f;
+
+
 /**
  *  @brief A type definition for point .
  */

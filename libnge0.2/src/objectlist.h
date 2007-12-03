@@ -16,11 +16,12 @@ struct  CLineObject
 
 class CLineObjectList
 {
-	CLineObjectList(){m_flag = true;};
+	CLineObjectList();
+	~CLineObjectList();
 	void Push(CLineObject* object);
 	void Clear();
 	int  Size();
-	void SetShowFlag(int flag){ m_flag = flag; };
+	void SetShowFlag(int flag);
 private:
 	list<CLineObject*> m_linelist;
 	int  m_flag;	
@@ -36,7 +37,8 @@ struct  CRectObject
 
 class CRectObjectList
 {
-	CRectObjectList(){m_flag = true;};
+	CRectObjectList();
+	~CRectObjectList();
 	void Push(CRectObject* object);
 	void Clear();
 	int  Size();
