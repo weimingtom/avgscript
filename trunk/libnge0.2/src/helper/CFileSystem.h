@@ -1,15 +1,36 @@
 #ifndef FILE_SYSTEM_H_
 #define FILE_SYSTEM_H_
 
+#ifdef WIN32
+#else
+#endif
+
+
+
+/**
+ * 文件属性定义，与$ony的定义相同。
+ */
 enum eAttributeFlags
 {
 	AF_READ_ONLY	= ( 1 << 0 ),
 	AF_HIDDEN	= ( 1 << 1 ),
-	AF_DIRECTORY	= ( 1 << 2 ),
-	AF_ARCHIVE	= ( 1 << 3 ),
-	AF_DOT_DOT	= ( 1 << 4 ),
-	AF_DRIVE	= ( 1 << 5 )
+	AF_UNKNOWN1	= ( 1 << 2 ),
+	AF_UNKNOWN2	= ( 1 << 3 ),
+	AF_DIRECTORY	= ( 1 << 4 ),
+	AF_ARCHIVE	= ( 1 << 5 ),
+	AF_DOT_DOT	= ( 1 << 30 ),
+	AF_DRIVE	= ( 1 << 31 ),
 };
+
+#ifdef WIN32
+
+struct SceIoStat
+{
+	int st_mode;
+};
+#define SceUID int
+#endif
+
 
 struct sDirEntry
 {
@@ -36,11 +57,7 @@ class CFile
 		u32			GetLength() const;
 		u32			Tell() const;
 		bool			Seek( const u32 offset, const u32 origin ) const;
-		char			FGetC() const;
-		string			GetExtension() const;
-		bool			IsReadOnly() const;
-		bool			IsWritable() const;
-		operator FILE * () const;
+		char			GetChar() const;
 	protected:
 		CFile( const CString & filename, FILE * const p_handle );
 		~CFile();
@@ -78,7 +95,11 @@ class CFileSystem
 		static bool		HideCorruptFiles();
 		static void		SetHideCorruptFiles( bool hide );
 	private:
-		static SceIoDirent	s_DirEntry;
+		#ifdef WIN32
+			//
+		#else
+			static SceIoDirent	s_DirEntry;
+		#endif
 		static string		s_szRootDirectory;
 };
 
