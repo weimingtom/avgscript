@@ -63,9 +63,11 @@ struct sDirEntry
 };
 
 typedef list< sDirEntry > CFileList;
-
+#ifdef WIN32
+typedef HANDLE	FIND_FILE_HANDLE;
+#else
 typedef SceUID	FIND_FILE_HANDLE;
-
+#endif
 /**
  * ÎÄ¼þ¶ÁÐ´Àà¡£
  */
