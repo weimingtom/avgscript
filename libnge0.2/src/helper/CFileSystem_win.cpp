@@ -87,30 +87,97 @@ CFile::~CFile()
 }
 
 
-bool CFileSystem::SetRoot( const string & directory );
-CFile*	CFileSystem::Open( const string & filename, const char * const p_open_flags );
-void	CFileSystem::Close( CFile * const p_file );
-bool	CFileSystem::FileExists( const string & filename );
-bool	CFileSystem::DirectoryExists( const string & directory );
-bool	CFileSystem::GetDirectoryFiles( const string & directory, CFileList & dir_files );
-bool	CFileSystem::FindFirstFile( const string & path, FIND_FILE_HANDLE & handle );
-bool	CFileSystem::FindNextFile( sDirEntry & dir_entry, FIND_FILE_HANDLE handle );
-bool	CFileSystem::FindCloseFile( FIND_FILE_HANDLE handle );
-bool	CFileSystem::CopyFile( const string & src_file, const string & dst_file, float progress_inc = 0.f );
-bool	CFileSystem::CopyDirectory( const string & src_dir, const string & dst_dir, float progress_inc = 0.f );
-bool	CFileSystem::DeleteFile( const string & filename );
-bool	CFileSystem::DeleteDirectory( const string & directory );
-bool	CFileSystem::MakeDirectory( const string & directory );
-bool	CFileSystem::IsUMDInserted();
-bool	CFileSystem::ActivateUMD();
-bool	CFileSystem::Rename( const string & old_name, const string & new_name );
-void	CFileSystem::SplitPath( const string & path, string * p_drive, string * p_dir, string * p_fname, string * p_ext );
-bool	CFileSystem::MakeReadOnly( const string & filename );
-bool	CFileSystem::MakeWritable( const string & filename );
-string	CFileSystem::MakeFullPath( const string & filename );
-string	CFileSystem::GetFileExtension( const string & filename );
-bool	CFileSystem::HideCorruptFiles();
-void	CFileSystem::SetHideCorruptFiles( bool hide );
+bool CFileSystem::SetWorkDir( const string & directory )
+{
+	if ( _chdir( directory.c_str() ) >= 0 )
+	{
+		s_workdir = directory;
+
+		return true;
+	}
+
+	return false;
+}
+
+CFile*	CFileSystem::Open( const string & filename, const char * const p_open_flags )
+{
+	FILE * const	p_handle( fopen( filename, p_open_flags ) );
+
+	if ( p_handle == NULL )
+	{
+		return NULL;
+	}
+
+	return new CFile( filename, p_handle );
+}
+
+void	CFileSystem::Close( CFile * const p_file )
+{
+	delete p_file;
+}
+bool	CFileSystem::FileExists( const string & filename )
+{
+}
+bool	CFileSystem::DirectoryExists( const string & directory )
+{
+}
+bool	CFileSystem::GetDirectoryFiles( const string & directory, CFileList & dir_files )
+{
+}
+bool	CFileSystem::FindFirstFile( const string & path, FIND_FILE_HANDLE & handle )
+{
+}
+bool	CFileSystem::FindNextFile( sDirEntry & dir_entry, FIND_FILE_HANDLE handle )
+{
+}
+bool	CFileSystem::FindCloseFile( FIND_FILE_HANDLE handle )
+{
+}
+bool	CFileSystem::CopyFile( const string & src_file, const string & dst_file, float progress_inc )
+{
+}
+bool	CFileSystem::CopyDirectory( const string & src_dir, const string & dst_dir, float progress_inc )
+{
+}
+bool	CFileSystem::DeleteFile( const string & filename )
+{
+}
+bool	CFileSystem::DeleteDirectory( const string & directory )
+{
+}
+bool	CFileSystem::MakeDirectory( const string & directory )
+{
+}
+bool	CFileSystem::IsUMDInserted()
+{
+}
+bool	CFileSystem::ActivateUMD()
+{
+}
+bool	CFileSystem::Rename( const string & old_name, const string & new_name )
+{
+}
+void	CFileSystem::SplitPath( const string & path, string * p_drive, string * p_dir, string * p_fname, string * p_ext )
+{
+}
+bool	CFileSystem::MakeReadOnly( const string & filename )
+{
+}
+bool	CFileSystem::MakeWritable( const string & filename )
+{
+}
+string	CFileSystem::MakeFullPath( const string & filename )
+{
+}
+string	CFileSystem::GetFileExtension( const string & filename )
+{
+}	
+bool	CFileSystem::HideCorruptFiles()
+{
+}
+void	CFileSystem::SetHideCorruptFiles( bool hide )
+{
+}
 
 
 
