@@ -93,3 +93,16 @@ class CFile
 		u32			m_length;
 };
 
+2 公共结构或者类的变量需要对外显示用/**< 变量描述 */
+例如：
+/**
+ * @brief A type definition for rectagle
+ */
+typedef struct
+{
+	float top;    /**< top of rect. */
+	float left;   /**< left of rect. */
+	float right;  /**< right of rect. */
+	float bottom; /**< bottom of rect. */
+}CRectf;
+
