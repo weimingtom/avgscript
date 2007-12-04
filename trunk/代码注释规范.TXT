@@ -1,0 +1,95 @@
+为了能够自动生成dexygen文档（helper下的html.rar就是按照这种规范写代码生成的文档，index.html打开），
+减小以后维护工作，特做以下规范。
+
+1 公共接口函数必须写注释。公共的类必须写描述。其他的可以自行决定（要求请看附录）。
+2 文档注释采用中文。
+3 以下部分提倡遵守，不做要求。
+  (1)函数名要求代表函数意义但不要过长。
+  (2)类的成员用m_.
+  (3)合理运用const作为变量的描述。
+  (4)每个文件最后多留一行。
+  (5)每个文件有个信息，如下
+//********************************************
+//  project : 
+//  filename: xxx.h
+//  author:   xxx@xxx.com 
+//  date:     20071202
+//  descript: 描述
+//  history:
+//********************************************
+
+附：接口注释规范,通常只会是.h文件里的：
+接口注释采用下面形式：这个是dexygen能够识别的注释，非公共接口注释请自行决定，但
+不要用这个。建议用//或者/* */。
+/**
+ * 这是一个接口描述，如果没写完的话
+ * 这是第2行。
+ * @param 参数类型,参数描述。
+ * @param 参数类型,参数描述。
+ * @return返回类型,返回描述。
+ * @see 同样功能的函数。（可选）
+ */
+例子：
+
+/**
+ * 文件读写类。
+ */
+class CFile
+{
+	public:
+		/**
+		 * 读文件函数。
+		 * @param void*,读取文件的位置。
+		 * @param int32,读取文件的长度。
+		 * @param int*, 实际读取文件的长度。
+		 * @return bool,成功为true，失败为false。
+		 */
+		bool			Read( void * p_address, u32 length, u32 * p_nbytes_read = NULL ) const;
+		/**
+		 * 写文件函数。
+		 * @param void*,写入文件的位置。
+		 * @param int32,写入文件的长度。
+		 * @param int*, 实际写入文件的长度。
+		 * @return bool,成功为true，失败为false。
+		 */
+		bool			Write( const void * p_address, u32 length, u32 * p_nbytes_written = NULL ) const;
+		/**
+		 * 是否到达文件尾。
+		 * @param 无参数。
+		 * @return bool,返回true或者false。
+		 */
+		bool			IsEOF() const;
+		/**
+		 * 获得文件长度。
+		 * @param 无参数。
+		 * @return int,返回文件的长度。
+		 */
+		u32			GetLength() const;
+		/**
+		 * 获得文件长度。
+		 * @param 无参数。
+		 * @return int,返回文件的长度。
+		 */
+		u32			Tell() const;
+		/**
+		 * 移动文件指针位置。
+		 * @param int,相对于初始位置的偏移。
+		 * @param int,同SEEK_END,SEEK_SET,SEEK_CUR.
+		 * @return int,返回成功失败标志。
+		 */
+		bool			Seek( const u32 offset, const u32 origin ) const;
+		/**
+		 * 读一个字符，同fgetchar。
+		 * @param ,无。
+		 * @return char,返回字符，文件指针+1（同fgetchar）。
+		 */
+		char			GetChar() const;
+	protected:
+		CFile( const char* filename, FILE * const handle );
+		~CFile();
+	private:
+		string			m_filename;
+		FILE *			m_phandle;
+		u32			m_length;
+};
+
