@@ -1,8 +1,10 @@
 #include "CFileSystem.h"
+#include <windows.h>
+
 
 bool CFile::Read( void * p_address, u32 length, u32 * p_nbytes_read ) const
 {
-	const u32 bytes_read( fread( p_address, 1, length, m_pHandle ) );
+	const u32 bytes_read( fread( p_address, 1, length, m_phandle ) );
 
 	if ( p_nbytes_read != NULL )
 	{
@@ -14,7 +16,7 @@ bool CFile::Read( void * p_address, u32 length, u32 * p_nbytes_read ) const
 
 bool CFile::Write( const void * p_address, u32 length, u32 * p_nbytes_written ) const
 {
-	const u32 bytes_written( fwrite( p_address, 1, length, m_pHandle ) );
+	const u32 bytes_written( fwrite( p_address, 1, length, m_phandle ) );
 
 	if ( p_nbytes_written != NULL )
 	{
@@ -26,22 +28,22 @@ bool CFile::Write( const void * p_address, u32 length, u32 * p_nbytes_written ) 
 
 bool CFile::IsEOF() const
 {
-	return ( feof( m_pHandle ) != 0 );
+	return ( feof( m_phandle ) != 0 );
 }
 
 u32  CFile::GetLength() const
 {
-	return m_Length;
+	return m_length;
 }
 
 u32  CFile::Tell() const
 {
-	return ftell( m_pHandle );
+	return ftell( m_phandle );
 }
 
 bool CFile::Seek( const u32 offset, const u32 origin ) const
 {
-	return ( fseek( m_pHandle, offset, origin ) == 0 );
+	return ( fseek( m_phandle, offset, origin ) == 0 );
 }
 
 char CFile::GetChar() const
@@ -57,19 +59,14 @@ char CFile::GetChar() const
 }
 
 
-CFile::operator FILE * () const
-{
-	return m_pHandle;
-}
-
-CFile::CFile( const string & filename, FILE * const p_handle )
-:	m_szFilename( filename )
-,	m_pHandle( p_handle )
-,	m_Length( 0 )
+CFile::CFile( const char * filename, FILE * const p_handle )
+:	m_filename( filename )
+,	m_phandle( p_handle )
+,	m_length( 0 )
 {
 	if ( Seek( 0, SEEK_END ) == true )
 	{
-		m_Length = Tell();
+		m_length = Tell();
 
 		if ( Seek( 0, SEEK_SET ) == false )
 		{
@@ -83,15 +80,18 @@ CFile::CFile( const string & filename, FILE * const p_handle )
 }
 CFile::~CFile()
 {
-	fclose( m_pHandle );
+	fclose( m_phandle );
 }
 
 
-bool CFileSystem::SetWorkDir( const string & directory )
+//
+// cfilesystem
+//
+bool CFileSystem::SetWorkDir( const char * dir )
 {
-	if ( _chdir( directory.c_str() ) >= 0 )
+	if ( _chdir( dir ) >= 0 )
 	{
-		s_workdir = directory;
+		m_workdir = dir;
 
 		return true;
 	}
@@ -99,7 +99,7 @@ bool CFileSystem::SetWorkDir( const string & directory )
 	return false;
 }
 
-CFile*	CFileSystem::Open( const string & filename, const char * const p_open_flags )
+CFile*	CFileSystem::Open( const char * filename, const char * const p_open_flags )
 {
 	FILE * const	p_handle( fopen( filename, p_open_flags ) );
 
@@ -115,18 +115,42 @@ void	CFileSystem::Close( CFile * const p_file )
 {
 	delete p_file;
 }
-bool	CFileSystem::FileExists( const string & filename )
+
+
+bool	CFileSystem::IsFileExists( const char * filename )
 {
+	CFile * const	p_file( Open( filename, "rb" ) );
+	if ( p_file == NULL )
+	{
+		return false;
+	}
+	Close( p_file );
+	return true;
 }
-bool	CFileSystem::DirectoryExists( const string & directory )
+
+bool	CFileSystem::IsDirExists( const char * dir )
 {
+	struct _stat stat;
+	if ( _stat(dir, &stat) != 0 )
+	{
+		return false;
+	}
+	return true;
 }
-bool	CFileSystem::GetDirectoryFiles( const string & directory, CFileList & dir_files )
+
+bool	CFileSystem::GetDirFiles( const string & directory, CFileList & dir_files )
 {
+	
 }
-bool	CFileSystem::FindFirstFile( const string & path, FIND_FILE_HANDLE & handle )
+
+bool	CFileSystem::FindFirstFile( const char* path, FIND_FILE_HANDLE & handle )
 {
+	//win32µÄsbº¯Êý¡£
+	WIN32_FIND_DATA FindFileData;
+  	handle = ::FindFirstFile(path, &FindFileData);
+	return (hFind != INVALID_HANDLE_VALUE);
 }
+
 bool	CFileSystem::FindNextFile( sDirEntry & dir_entry, FIND_FILE_HANDLE handle )
 {
 }
