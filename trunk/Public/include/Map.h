@@ -48,11 +48,25 @@ public:
 	~CMap();
 
 	bool Init(IVideoDriver* pVideoDriver);
-	void Draw();
+	void Draw(int nLayer = ALL_LAYER);
 
 	bool Save(const char* pszFileName);
 	bool Load(const char* pszFileName);
 	void ScrollMap(int nOffsetX,int nOffsetY);
+	bool NewMap(int nRows,int nCols);
+	bool SetMapCell(int nRow, int nCol, stCell cell);
+	void CalcSourceXY(	CTexture* pTexture,int nMapX, int nMapY, int& nSourceX, int& nSourceY);	//calc source x, y 
+
+	CTexture* GetMapTexture(int nIndex);
+	CTexture* GetBackGroundTexture()
+	{
+		return m_pBackGroundTexture;
+	}
+
+	int GetMapRows(){return m_nMapRows;	}
+	int GetMapCols(){return m_nMapCols;	}
+	void SetMapRows(int nRows){m_nMapRows = nRows;}
+	void SetMapCols(int nCols){m_nMapCols =nCols;}
 
 #ifdef _TEST_
 	void Test();
@@ -70,6 +84,8 @@ private:
 	int		  m_nMapCols;
 	int       m_nDisplayTop;		//display top 0 -> map y
 	int       m_nDisplayLeft;		//display Left 0-> map x
+
+	bool      m_bModify;			
 };
 
 

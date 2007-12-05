@@ -16,10 +16,23 @@
 #define MAX_VALUE_BUF_LEN 256
 
 //CMap
-#define MAX_MAP_TEXTURE_NUM 512
-#define MAX_MAP_CELLS 64
-#define MAX_DISPLAY_CELLS_ROW 8
-#define MAX_DISPLAY_CELLS_COL 15
 
+#define MAX_MAP_TEXTURE_NUM 512		//max pic num 
+#define MAX_MAP_CELLS 64			//max map size 64*64
+#define MAX_MAP_ROWS 64
+#define MAX_MAP_COLS 64
+
+#define GROUND_LAYER_1   0x01		//ground layer
+#define OBJECT_LAYER_1   0x02       //object layer1
+#define OBJECT_LAYER_2   0x04       //object layer2
+#define ALL_LAYER (GROUND_LAYER_1|OBJECT_LAYER_1|OBJECT_LAYER_2)
+
+
+//Display
+#define MAX_DISPLAY_CELLS_ROW 8		
+#define MAX_DISPLAY_CELLS_COL 15
+#define CELL_SIZE 32                //cell size 32*32 pixel
+#define DISPLAY_WIDTH 480
+#define DISPLAY_HEIGHT 272
 
 #endif

@@ -5,6 +5,7 @@
 
 CMap::CMap()
 {
+	m_bModify = false;
 }
 
 CMap::~CMap()
@@ -88,6 +89,7 @@ bool CMap::Save(const char* pszFileName)
 
 	fclose(fp);
 
+	m_bModify = false;
 	return true;
 
 }
@@ -116,7 +118,7 @@ bool CMap::Load(const char* pszFileName)
 
 
 
-void CMap::Draw()
+void CMap::Draw(int nLayer)
 {
 
 	//draw background 
@@ -191,14 +193,15 @@ void CMap::Draw()
 			nSourceWidth = nRight - nLeft;
 			nSourceHeight = nBottom - nTop;
 
-			//now calc nSourceX and nSourceY
+
+			//now calc ground layer's nSourceX and nSourceY
 			//find texture 
 			CTexture* pTexture;
 			int nTextureIndex;
 			
 			nTextureIndex = m_pCell[nMapX+nMapY*m_nMapCols].GroundPic;
 			pTexture = m_pMapTextureArr[nTextureIndex];
-			if(pTexture==NULL)continue;
+			if(pTexture==NULL)continue;	//contine to draw next col
 			//get pTexture width and height
 			int nTextureCells;
 			nTextureCells = pTexture->w / CELL_SIZE;
@@ -210,14 +213,65 @@ void CMap::Draw()
 			//calc nSourceX,nSourceY
 			nSourceX = nCellCol * CELL_SIZE;
 			nSourceY = nCellRow * CELL_SIZE;
+
 			//add offset 
 			nSourceX = nSourceX + nLeftOffset;
 			nSourceY = nSourceY + nTopOffset;
 
 			//ok we can draw now
+			//ground layer 1
+			if(nLayer&GROUND_LAYER_1)
+				m_pVideoDriver->RenderQuad(pTexture,nSourceX,nSourceY,nSourceWidth,nSourceHeight,nDestX,nDestY,1,1,0, RGBA(255,255,255,255));
+			
 
-			m_pVideoDriver->RenderQuad(pTexture,nSourceX,nSourceY,nSourceWidth,nSourceHeight,nDestX,nDestY,1,1,0, RGBA(255,255,255,255));
+			//calc objcet layer1 nSourceX, nSourceY
+			nTextureIndex = m_pCell[nMapX+nMapY*m_nMapCols].ObjPic;
+			pTexture = m_pMapTextureArr[nTextureIndex];
+			if(pTexture==NULL)continue;	//contine to draw next col
+			//get pTexture width 
+			nTextureCells = pTexture->w / CELL_SIZE;
+			//find cell in texture pos
+			nCellRow = m_pCell[nMapX+nMapY*m_nMapCols].Obj / nTextureCells;
+			nCellCol = m_pCell[nMapX+nMapY*m_nMapCols].Obj % nTextureCells;
+			//calc nSourceX,nSourceY
+			nSourceX = nCellCol * CELL_SIZE;
+			nSourceY = nCellRow * CELL_SIZE;
+			//add offset 
+			nSourceX = nSourceX + nLeftOffset;
+			nSourceY = nSourceY + nTopOffset;
+			//get object layer 's alpha value
+			int nAlpha = 0;
+			nAlpha = m_pCell[nMapX+nMapY*m_nMapCols].Level;
 
+			//draw objcet layer
+			if(nLayer&OBJECT_LAYER_1)
+				m_pVideoDriver->RenderQuad(pTexture,nSourceX,nSourceY,nSourceWidth,nSourceHeight,nDestX,nDestY,1,1,0, RGBA(255,255,255,nAlpha));
+			
+			
+
+			//calc objcet layer2 nSourceX, nSourceY
+			nTextureIndex = m_pCell[nMapX+nMapY*m_nMapCols].Obj2Pic;
+			pTexture = m_pMapTextureArr[nTextureIndex];
+			if(pTexture==NULL)continue;	//contine to draw next col
+			//get pTexture width 
+			nTextureCells = pTexture->w / CELL_SIZE;
+			//find cell in texture pos
+			nCellRow = m_pCell[nMapX+nMapY*m_nMapCols].Obj2 / nTextureCells;
+			nCellCol = m_pCell[nMapX+nMapY*m_nMapCols].Obj2 % nTextureCells;
+			//calc nSourceX,nSourceY
+			nSourceX = nCellCol * CELL_SIZE;
+			nSourceY = nCellRow * CELL_SIZE;
+			//add offset 
+			nSourceX = nSourceX + nLeftOffset;
+			nSourceY = nSourceY + nTopOffset;
+			//get object layer 's alpha value
+			
+			nAlpha = m_pCell[nMapX+nMapY*m_nMapCols].Level2;
+		
+			//draw objcet layer 2
+			if(nLayer&OBJECT_LAYER_2)
+				m_pVideoDriver->RenderQuad(pTexture,nSourceX,nSourceY,nSourceWidth,nSourceHeight,nDestX,nDestY,1,1,0, RGBA(255,255,255,nAlpha));
+				
 		}
 	}
 	
@@ -226,21 +280,71 @@ void CMap::Draw()
 
 void CMap::ScrollMap(int nOffsetX,int nOffsetY)
 {
+
 	m_nDisplayLeft+=nOffsetX;
 	m_nDisplayTop+=nOffsetY;
 
 	if(m_nDisplayLeft<0)
+	{
 		m_nDisplayLeft=0;
+	}
 	if(m_nDisplayLeft +DISPLAY_WIDTH>m_nMapCols*CELL_SIZE)
+	{
 		m_nDisplayLeft = m_nMapCols*CELL_SIZE - DISPLAY_WIDTH;
-	if(m_nDisplayTop<0)
-		m_nDisplayTop=0;
-	if(m_nDisplayTop +DISPLAY_HEIGHT>m_nMapRows*CELL_SIZE)
-		m_nDisplayTop = m_nMapRows*CELL_SIZE - DISPLAY_HEIGHT;
 
+	}
+	if(m_nDisplayTop<0)
+	{
+		m_nDisplayTop=0;
+	}		
+
+	if(m_nDisplayTop +DISPLAY_HEIGHT>m_nMapRows*CELL_SIZE)
+	{
+		m_nDisplayTop = m_nMapRows*CELL_SIZE - DISPLAY_HEIGHT;
+	}
 
 }
 
+bool CMap::NewMap(int nRows,int nCols)
+{
+	if(nRows<=0 ||nRows>MAX_MAP_ROWS
+		|| nCols<=0 || nCols>MAX_MAP_COLS)
+		return false;
+	if(m_bModify)
+		return false; //must first save current modified map
+
+	//delete 
+	if(m_pCell)
+		delete[] m_pCell;
+
+	m_pCell = new stCell[nRows*nCols];
+	return true;
+}
+
+bool CMap::SetMapCell(int nRow, int nCol, stCell cell)
+{
+	if(nRow<=0 ||nRow>MAX_MAP_ROWS
+		|| nCol<=0 || nCol>MAX_MAP_COLS)
+		return false;
+	m_pCell[nRow*m_nMapCols+nCol]=cell;
+	m_bModify = true;
+	return true;
+}
+
+
+CTexture* CMap::GetMapTexture(int nIndex)
+{
+	if(nIndex<0||nIndex>=m_nTextureCount)
+		return NULL;
+
+	return m_pMapTextureArr[nIndex];
+}
+
+
+void CMap::CalcSourceXY(	CTexture* pTexture,int nMapX, int nMapY, int& nSourceX, int& nSourceY)
+{
+	
+}
 #ifdef _TEST_
 void CMap::Test()
 {
@@ -250,7 +354,7 @@ void CMap::Test()
 	for ( int i = 0; i< m_nMapRows*m_nMapCols;i++)
 	{
 		m_pCell[i].GroundPic = 0;
-		m_pCell[i].Ground = i %5 + 1;
+		m_pCell[i].Ground = i %30 + 1;
 
 	}
 	
@@ -258,8 +362,8 @@ void CMap::Test()
 	Save("data\\save\\test.mapfile");
 	Load("data\\save\\test.mapfile");
 
-	m_nDisplayTop = 16;
-	m_nDisplayLeft = 16;
+//	m_nDisplayTop = 16;
+//	m_nDisplayLeft = 16;
 }
 
 #endif
