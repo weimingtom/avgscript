@@ -16,7 +16,7 @@ float scale = 1.0;
 float angel = 1.0;
 	//CMap mapt;
 
-CMapEdit g_mapedit;
+CMapEdit g_Mapedit;
 
 void ButtonPressedProc(SDL_JoyButtonEvent * jbutton)
 {
@@ -53,6 +53,19 @@ void ButtonPressedProc(SDL_JoyButtonEvent * jbutton)
 	
 }                   
 
+void MouseMoveProc(SDL_MouseMotionEvent* MouseEvent)
+{
+
+	g_Mapedit.MoveTo(MouseEvent->x, MouseEvent->y);
+
+	
+}
+
+void MouseUpProc(SDL_MouseButtonEvent * MouseButton)
+{
+	
+}
+
 void KeyPressedProc(SDL_keysym * keysym)
 {
     
@@ -60,21 +73,21 @@ void KeyPressedProc(SDL_keysym * keysym)
     {
 
 	case SDLK_UP: 
-		g_mapedit.Move(0,-1);
+		g_Mapedit.Move(0,-32);
 	//	mapt.ScrollMap(0,-8);
 		break;
 	case SDLK_DOWN: 
-		g_mapedit.Move(0,1);
+		g_Mapedit.Move(0,32);
 	//	mapt.ScrollMap(0,8);
 		
 		break;
 	case SDLK_LEFT: 
-		g_mapedit.Move(-1,0);
+		g_Mapedit.Move(-32,0);
 	//	mapt.ScrollMap(-8,0);
 		
 		break;
 	case SDLK_RIGHT: 
-		g_mapedit.Move(1,0);
+		g_Mapedit.Move(32,0);
 	//	mapt.ScrollMap(8,0);
 		
 		break; 
@@ -106,6 +119,10 @@ void InputProc()
 			break;
 		case SDL_JOYBUTTONDOWN:
 			ButtonPressedProc(&event.jbutton);
+		case SDL_MOUSEMOTION:
+			MouseMoveProc(&event.motion);
+		case SDL_MOUSEBUTTONUP:
+			MouseUpProc(&event.button);
 			break;
 		}
 	}
@@ -118,7 +135,7 @@ int DrawScene()
 //	sys->RenderQuad(bg[id],0,0,480,272,0,0,scale,scale,angel,0xffffffff);
 //	sys->RenderQuad(mapt.,0,0,480,272,0,0,scale,scale,angel,0xffffffff);
 	//mapt.Draw();
-	g_mapedit.Draw();
+	g_Mapedit.Draw();
 	sys->EndScene();
     return( TRUE );
 }
@@ -130,9 +147,12 @@ void test()
 
 //	mapt.Init(sys);
 
-	g_mapedit.Init(sys);
+	g_Mapedit.Init(sys);
 	
-	g_mapedit.Test();
+	g_Mapedit.Test();
+
+
+	g_Mapedit.ChangeStatus(MapEdit_Status_Select);
 //	mapt.Test();
 
 	
