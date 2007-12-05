@@ -1,0 +1,175 @@
+/* -- old style
+extern dword fs_dir_to_menu(const char * dir, p_win_menuitem * mitem, dword icolor, dword selicolor, dword selrcolor, dword selbcolor)
+{
+	SceIoDirent info;
+	dword cur_count = 0;
+	p_win_menuitem item = NULL;
+	int fd = sceIoDopen(dir);
+	if(fd < 0)
+		return 0;
+	memset(&info, 0, sizeof(SceIoDirent));
+	while(sceIoDread(fd, &info) > 0)
+	{
+		if(info.d_stat.st_attr & FIO_SO_IFDIR)
+		{
+			if(info.d_name[0] == '.' && info.d_name[1] == 0)
+				continue;
+			if(cur_count % 256 == 0)
+			{
+				if(cur_count == 0)
+					* mitem = (p_win_menuitem)malloc(sizeof(t_win_menuitem) * 256);
+				else
+					* mitem = (p_win_menuitem)realloc(*mitem, sizeof(t_win_menuitem) * (cur_count + 256));
+				if(* mitem == NULL)
+					return 0;
+				item = *mitem;
+			}
+			item[cur_count].data = (void *)fs_filetype_dir;
+			strcpy(item[cur_count].compname, info.d_name);
+			item[cur_count].name[0] = '<';
+			if((item[cur_count].width = strlen(info.d_name) + 2) > 40)
+			{
+				strncpy(&item[cur_count].name[1], info.d_name, 35);
+				item[cur_count].name[36] = item[cur_count].name[37] = item[cur_count].name[38] = '.';
+				item[cur_count].name[39] = '>';
+				item[cur_count].name[40] = 0;
+				item[cur_count].width = 40;
+			}
+			else
+			{
+				strcpy(&item[cur_count].name[1], info.d_name);
+				item[cur_count].name[item[cur_count].width - 1] = '>';
+				item[cur_count].name[item[cur_count].width] = 0;
+			}
+		}
+		else
+		{
+			t_fs_filetype ft;
+			if((ft = fs_file_get_type(info.d_name)) == fs_filetype_unknown)
+				continue;
+			if(cur_count % 256 == 0)
+			{
+				if(cur_count == 0)
+					* mitem = (p_win_menuitem)malloc(sizeof(t_win_menuitem) * 256);
+				else
+					* mitem = (p_win_menuitem)realloc(*mitem, sizeof(t_win_menuitem) * (cur_count + 256));
+				if(* mitem == NULL)
+					return 0;
+				item = *mitem;
+			}
+			item[cur_count].data = (void *)ft;
+			strcpy(item[cur_count].compname, info.d_name);
+			if((item[cur_count].width = strlen(info.d_name)) > 40)
+			{
+				strncpy(item[cur_count].name, info.d_name, 37);
+				item[cur_count].name[37] = item[cur_count].name[38] = item[cur_count].name[39] = '.';
+				item[cur_count].name[40] = 0;
+				item[cur_count].width = 40;
+			}
+			else
+				strcpy(item[cur_count].name, info.d_name);
+		}
+		charsets_sjis_conv((const byte *)item[cur_count].name, (byte *)item[cur_count].name);
+		item[cur_count].icolor = icolor;
+		item[cur_count].selicolor = selicolor;
+		item[cur_count].selrcolor = selrcolor;
+		item[cur_count].selbcolor = selbcolor;
+		cur_count ++;
+	}
+	sceIoDclose(fd);
+	return cur_count;
+}
+*/
+
+// New style fat system custom reading
+extern dword fs_dir_to_menu(const char * dir, char * sdir, p_win_menuitem * mitem, dword icolor, dword selicolor, dword selrcolor, dword selbcolor, bool showhidden, bool showunknown)
+{
+	p_win_menuitem item = NULL;
+	p_fat_info info;
+	if(* mitem != NULL)
+	{
+		free((void *)* mitem);
+		* mitem = NULL;
+	}
+	dword count = fat_readdir(dir, sdir, &info);
+	if(count == INVALID)
+		return 0;
+	if(*mitem != NULL)
+	{
+		free((void *)* mitem);
+		* mitem = NULL;
+	}
+	dword i, cur_count = 0;
+	for(i = 0; i < count; i ++)
+	{
+		if(!showhidden && (info[i].attr & FAT_FILEATTR_HIDDEN) > 0)
+			continue;
+		if(cur_count % 256 == 0)
+		{
+			if(cur_count == 0)
+				* mitem = (p_win_menuitem)malloc(sizeof(t_win_menuitem) * 256);
+			else
+				* mitem = (p_win_menuitem)realloc(*mitem, sizeof(t_win_menuitem) * (cur_count + 256));
+			if(* mitem == NULL)
+			{
+				free((void *)info);
+				return 0;
+			}
+			item = *mitem;
+		}
+		if(info[i].attr & FAT_FILEATTR_DIRECTORY)
+		{
+			item[cur_count].data = (void *)fs_filetype_dir;
+			strcpy(item[cur_count].shortname, info[i].filename);
+			strcpy(item[cur_count].compname, info[i].longname);
+			item[cur_count].name[0] = '<';
+			if((item[cur_count].width = strlen(info[i].longname) + 2) > 40)
+			{
+				strncpy(&item[cur_count].name[1], info[i].longname, 35);
+				item[cur_count].name[36] = item[cur_count].name[37] = item[cur_count].name[38] = '.';
+				item[cur_count].name[39] = '>';
+				item[cur_count].name[40] = 0;
+				item[cur_count].width = 40;
+			}
+			else
+			{
+				strcpy(&item[cur_count].name[1], info[i].longname);
+				item[cur_count].name[item[cur_count].width - 1] = '>';
+				item[cur_count].name[item[cur_count].width] = 0;
+			}
+		}
+		else
+		{
+			if(info[i].filesize == 0)
+				continue;
+			t_fs_filetype ft = fs_file_get_type(info[i].longname);
+			if(!showunknown && ft == fs_filetype_unknown)
+				continue;
+			item[cur_count].data = (void *)ft;
+			strcpy(item[cur_count].shortname, info[i].filename);
+			strcpy(item[cur_count].compname, info[i].longname);
+			if((item[cur_count].width = strlen(info[i].longname)) > 40)
+			{
+				strncpy(item[cur_count].name, info[i].longname, 37);
+				item[cur_count].name[37] = item[cur_count].name[38] = item[cur_count].name[39] = '.';
+				item[cur_count].name[40] = 0;
+				item[cur_count].width = 40;
+			}
+			else
+				strcpy(item[cur_count].name, info[i].longname);
+		}
+		item[cur_count].icolor = icolor;
+		item[cur_count].selicolor = selicolor;
+		item[cur_count].selrcolor = selrcolor;
+		item[cur_count].selbcolor = selbcolor;
+		item[cur_count].selected = false;
+		item[cur_count].data2[0] = info[i].cdate;
+		item[cur_count].data2[1] = info[i].ctime;
+		item[cur_count].data2[2] = info[i].mdate;
+		item[cur_count].data2[3] = info[i].mtime;
+		item[cur_count].data3 = info[i].filesize;
+		cur_count ++;
+	}
+	free((void *)info);
+	return cur_count;
+}
