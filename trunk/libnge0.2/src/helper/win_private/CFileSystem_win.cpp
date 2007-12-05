@@ -1,7 +1,9 @@
-#include "CFileSystem.h"
-#include <windows.h>
+#include "CFileSystem_win.h"
+#include <stdio.h>
+#include <direct.h>
+#include <sys/stat.h>
 
-
+string	CFileSystem::m_workdir ="";
 bool CFile::Read( void * p_address, u32 length, u32 * p_nbytes_read ) const
 {
 	const u32 bytes_read( fread( p_address, 1, length, m_phandle ) );
@@ -101,7 +103,7 @@ bool CFileSystem::SetWorkDir( const char * dir )
 
 CFile*	CFileSystem::Open( const char * filename, const char * const p_open_flags )
 {
-	FILE * const	p_handle( fopen( filename, p_open_flags ) );
+	FILE * const	p_handle =fopen( filename, p_open_flags ) ;
 
 	if ( p_handle == NULL )
 	{
@@ -119,7 +121,7 @@ void	CFileSystem::Close( CFile * const p_file )
 
 bool	CFileSystem::IsFileExists( const char * filename )
 {
-	CFile * const	p_file( Open( filename, "rb" ) );
+	CFile * const	p_file = Open( filename, "rb" ) ;
 	if ( p_file == NULL )
 	{
 		return false;
@@ -130,17 +132,55 @@ bool	CFileSystem::IsFileExists( const char * filename )
 
 bool	CFileSystem::IsDirExists( const char * dir )
 {
-	struct _stat stat;
-	if ( _stat(dir, &stat) != 0 )
+	struct _stat filestat;
+	if ( ::_stat(dir, &filestat) != 0 )
 	{
 		return false;
 	}
 	return true;
 }
 
-bool	CFileSystem::GetDirFiles( const string & directory, CFileList & dir_files )
+bool	CFileSystem::GetDirFiles( const char* directory,  CFileList* dir_files )
 {
-	
+	bool ret_code = false,find_code =false;
+	FIND_FILE_HANDLE handle;
+
+	if ( CFileSystem::FindFirstFile( directory, handle ) == true )
+	{
+		ret_code = true;
+		find_code = true;
+		while ( find_code&& ret_code == true )
+		{
+			sDirEntry*	dir_entry = new sDirEntry;
+			find_code = (CFileSystem::FindNextFile( dir_entry, handle ) == true);
+			if(find_code == false)
+				continue;
+			if ( dir_entry->m_filename != "." && dir_entry->m_filename != ".." )
+			{
+				//directory[strlen(directory)-2]='\0';
+				char buf[256] = {0};
+				strncpy(buf,directory,strlen(directory)-2);
+				//dir_entry->m_filename = directory[strlen(directory)-2]='\0';
+				dir_entry->m_filename = string(buf)+string( "\\" ) + dir_entry->m_filename ;
+				dir_files->push_back( dir_entry );
+				if ( dir_entry->IsDirectory() == true )
+				{
+					string format = dir_entry->m_filename+string("\\*");
+					//dir_entry->m_filename  = dir_entry->m_filename+string("\\*");
+					//dir_entry->m_filename  ="J:\\test\\libevent\\*";
+					ret_code = GetDirFiles(  format.c_str(), dir_files );
+				}
+			}
+		}
+
+		CFileSystem::FindCloseFile( handle );
+	}
+	else
+	{
+		printf("FindFirstFile FAILED!");
+	}
+
+	return ret_code;
 }
 
 bool	CFileSystem::FindFirstFile( const char* path, FIND_FILE_HANDLE & handle )
@@ -148,15 +188,37 @@ bool	CFileSystem::FindFirstFile( const char* path, FIND_FILE_HANDLE & handle )
 	//win32µÄsbº¯Êý¡£
 	WIN32_FIND_DATA FindFileData;
   	handle = ::FindFirstFile(path, &FindFileData);
-	return (hFind != INVALID_HANDLE_VALUE);
+	return (handle != INVALID_HANDLE_VALUE);
 }
 
-bool	CFileSystem::FindNextFile( sDirEntry & dir_entry, FIND_FILE_HANDLE handle )
+bool	CFileSystem::FindNextFile( sDirEntry * dir_entry, FIND_FILE_HANDLE handle )
 {
+	WIN32_FIND_DATA FindFileData;
+	const s32 error_code = ::FindNextFile(handle,&FindFileData);
+
+	if ( error_code != 0 )
+	{
+		//dir_entry.m_states = FindFileData.d_stat;
+		if(FindFileData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY){
+			dir_entry->m_stats.st_mode = FIO_S_IFDIR;
+		}
+		else{
+			//
+		}
+
+		dir_entry->m_filename = FindFileData.cFileName;
+
+		return true;
+	}
+
+	return false;
 }
 bool	CFileSystem::FindCloseFile( FIND_FILE_HANDLE handle )
 {
+	return (::FindClose(handle)!=0);
+	
 }
+/*
 bool	CFileSystem::CopyFile( const string & src_file, const string & dst_file, float progress_inc )
 {
 }
@@ -202,6 +264,6 @@ bool	CFileSystem::HideCorruptFiles()
 void	CFileSystem::SetHideCorruptFiles( bool hide )
 {
 }
-
+*/
 
 
