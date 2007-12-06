@@ -1,0 +1,24 @@
+===============================================================================
+    $Id: README,v 1.4 2007/10/17$
+    Libcoolaudio (c) 2007 
+===============================================================================
+1. this libcoolaudio now support mp3,ogg,wav with same interface,other audio type will coming soon.
+  you can use it directly with pspsdk,or with SDL,there is a Windows version with SDL.
+  see demo_with_pspsdk and demo_with_nge(SDL) for more info.
+
+2. complier this lib
+to complier the src use:
+	make clean
+        make
+to install the src use,(the lib install to include and lib,your app should add this path):
+        make install
+
+to complier the windows version:
+	open libcoolaudio.dsw with Visual C++6.0 or higher(SDL,SDL_mixer needed).
+
+3.copyright:
+   see GPL.
+4.credit:
+   cooleyes@263.net
+   newcreat@sina.com.cn
+      
