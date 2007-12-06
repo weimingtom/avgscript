@@ -39,7 +39,7 @@ struct SceIoStat
 };
 #define SceUID int
 
-
+#define MAX_BUFFER 10
 
 struct sDirEntry
 {
@@ -50,7 +50,7 @@ struct sDirEntry
 	 * @param 无
 	 * @return bool,如函数名所示。
 	 */
-	bool		IsFile() const			{ return ( IsDrive() == false && IsDotDot() == false && IsDirectory() == false ); }
+	bool		IsFile() const			{ return ( IsDirectory() == false ); }
 	/**
 	 * 当前类型是否是一个盘符。
 	 * @param 无
@@ -255,12 +255,12 @@ class CFileSystem
 		 * @param const char*,扩展名。
 		 * @return 无返回值。
 		 */
-		static void		SplitPath( const char * path, const char * drive, const char * dir, const char * fname, const char * ext );
+		static void		SplitPath( const char * path, char * drive, char * dir, char * fname, char * ext );
 	private:
 		static bool FindFirstFile( const char* path, FIND_FILE_HANDLE & handle );
 		static bool	FindNextFile( sDirEntry * dir_entry, FIND_FILE_HANDLE handle );
 		static bool	FindCloseFile( FIND_FILE_HANDLE handle );
-	
+		static void FixPath(char* desstr,const char* srcstr);
 	
 		static string		m_workdir;
 };
