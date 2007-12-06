@@ -1,0 +1,31 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: libcoolaudio - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\IBM\LOCALS~1\Temp\RSPDD.tmp" with contents
+[
+/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_MBCS" /D "_LIB" /Fp"Debug/libcoolaudio.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"G:\libcoolaudio\src\psp\libcoolaudio.cpp"
+"G:\libcoolaudio\src\psp\play_mp3_win.cpp"
+"G:\libcoolaudio\src\psp\play_ogg_win.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\IBM\LOCALS~1\Temp\RSPDD.tmp" 
+Creating command line "link.exe -lib /nologo /out:"Debug\libcoolaudio.lib"  .\Debug\libcoolaudio.obj .\Debug\play_mp3_win.obj .\Debug\play_ogg_win.obj "
+<h3>Output Window</h3>
+Compiling...
+libcoolaudio.cpp
+play_mp3_win.cpp
+play_ogg_win.cpp
+Creating library...
+
+
+
+<h3>Results</h3>
+libcoolaudio.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

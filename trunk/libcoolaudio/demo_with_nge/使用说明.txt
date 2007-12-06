@@ -1,0 +1,16 @@
+libnge 使用libcoolaudio，以下假设都是安装的topoc整合包，没安装整合包的请自己放在相应目录下。
+
+psp版
+1 拷贝libSDLmain.a到pspdev\pspdev\psp\lib覆盖原来的libSDLmain.a。（主要是启用核心态）
+2 设置demo makefile指定include和lib路径。编译即可。
+如果不会设置makefile的请按下面傻瓜安装：
+3 将include和lib下的文件加入到pspdev\libnge_psp\include 和pspdev\libnge_psp\lib。（或者你自己写makefile指定目录）
+4 将demo/lesson5拷贝到pspdev\libnge_psp\demo，和那些lesson放一起。然后make即可。
+
+win版：
+1 打开demo工程
+2 加入libcoolaudio的include和lib。
+3 拷贝SDL_mixer.dll到system32下，这个是支持mp3的dll。
+
+
+运行请放test.mp3到demo\lesson5（win）和demo\lesson5\__SCE__lesson5（psp）下

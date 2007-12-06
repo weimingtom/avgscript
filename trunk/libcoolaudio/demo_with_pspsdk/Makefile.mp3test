@@ -1,0 +1,16 @@
+TARGET = mp3test
+OBJS = testmp3.o
+INCDIR = ../include
+CFLAGS = -G0 -Wall -O2
+CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
+ASFLAGS = $(CFLAGS)
+
+LIBDIR = ../lib
+LDFLAGS =
+LIBS= -lcoolaudio -lpsppower -lpspmpeg -lpspaudiocodec -lpspaudio -lm 
+
+EXTRA_TARGETS = EBOOT.PBP SCEkxploit
+PSP_EBOOT_TITLE = mp3 test
+
+PSPSDK=$(shell psp-config --pspsdk-path)
+include $(PSPSDK)/lib/build.mak
