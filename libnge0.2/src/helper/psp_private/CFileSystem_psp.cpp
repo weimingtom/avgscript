@@ -58,7 +58,7 @@ char CFile::GetChar() const
 }
 
 
-CFile::CFile( const char * filename, FILE * const p_handle )
+CFile::CFile( const char * filename, SceUID p_handle )
 :	m_filename( filename )
 ,	m_phandle( p_handle )
 ,	m_length( 0 )
