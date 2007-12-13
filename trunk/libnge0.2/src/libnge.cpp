@@ -18,7 +18,7 @@ IVideoDriver* NGE_GetVideoDriver()
     
 			surface = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP,
 		        SDL_OPENGL|SDL_GL_DOUBLEBUFFER );
-	       driver = new COglSystem;
+	       driver = new IVideoDriver;
 	#else
 	       driver = new CGuSystem;
 	#endif
