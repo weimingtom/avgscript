@@ -6,14 +6,14 @@
 #include <GL/glaux.h>
 #include "math_compatible.h"
 #include "datatype.h"
-
+#include "SDL.h"
 /**
  *  图象显示接口，有2个实现分别对应2个平台。此处不用派生为了避免虚函数的开销。
  */
 class IVideoDriver
 {
 public:
-      IVideoDriver(){ m_clrcolor = 0xff000000; };
+      IVideoDriver();
       /**
        * 显示开始函数，所有的显示函数都必须在BeginScene()和EndScene()之间。
        * 作用是清屏和一些初始化工作。默认是用黑色0xff000000清屏。可以用
@@ -68,13 +68,13 @@ public:
        * 设置清屏的颜色值，用宏RGBA(r,g,b,a)生成这个颜色值。
        * @param color int,清屏的颜色值。
        */
-       void SetClearColor(int color){	m_clrcolor = color;};
+       void SetClearColor(int color);
       
       /**
        * 获取清屏的颜色值。
        * @return 颜色值. 
        */
-       int GetClearColor(){  return m_clrcolor; }; 
+       int GetClearColor(); 
       
       /**
        * 调试函数，初始化fps记数器
@@ -106,7 +106,7 @@ public:
         * @param color int,直线的颜色，用宏RGBA生成这个颜色。
         * @return 无返回值。
         */
-       void DrawLine(Cpointf p1, Cpointf p2, int color) ;
+       void DrawLine(CPointf p1, CPointf p2, int color) ;
       
        /**
         * 画矩形线框的函数，传入参数是4个float值。
@@ -114,7 +114,7 @@ public:
         * @param y float,画到屏幕上的y坐标。
         * @param width float,矩形线框的宽。
         * @param height float,矩形线框的高。
-        * @param color float,线框颜色。
+        * @param color int,线框颜色。
         * @return 无返回值。
         */
        void  DrawRect(float x, float y, float width, float height,int color) ;
@@ -122,7 +122,7 @@ public:
        /**
         * 画矩形线框的函数，传入参数是CRectf值。
         * @param rect CRectf,矩形线框的参数。
-        * @param color float,线框颜色。
+        * @param color int,线框颜色。
         * @return 无返回值。
         */
        void DrawRect(CRectf rect,int color) ;
@@ -133,7 +133,7 @@ public:
         * @param y float,画到屏幕上的y坐标。
         * @param width float,矩形的宽。
         * @param height float,矩形的高。
-        * @param color float,实心矩形颜色。
+        * @param color int,实心矩形颜色。
         * @return 无返回值。
         */
        void  FillRect(float x, float y, float width, float height,int color) ;
@@ -141,15 +141,71 @@ public:
        /**
         * 画实心矩形的函数，传入参数是CRectf值。
         * @param rect CRectf,矩形的参数。
-        * @param color float,实心矩形颜色。
+        * @param color int,实心矩形颜色。
         * @return 无返回值。
         */
        void FillRect(CRectf rect,int color) ;
        
-	
+	   /**
+        * 画圆形线框的函数。
+        * @param x float,圆心的顶点的x坐标。
+		* @param y float,圆心的顶点的y坐标。
+		* @param radius float ,圆的半径。
+        * @param color int,圆形线框的颜色。
+        * @return 无返回值。
+        */
+	   void DrawCircle(float x, float y, float radius, int color);
+	   /**
+        * 画实心圆形的函数。
+        * @param x float,圆心的顶点的x坐标。
+		* @param y float,圆心的顶点的y坐标。
+		* @param radius float ,圆的半径。
+        * @param color int,实心圆形的颜色。
+        * @return 无返回值。
+        */
+	   void FillCircle(float x, float y, float radius, int color);
+	   /**
+        * 画椭圆线框的函数。
+        * @param x float,圆心的顶点的x坐标。
+		* @param y float,圆心的顶点的y坐标。
+		* @param xradius float ,椭圆x的半径。
+		* @param yradius float ,椭圆y的半径。
+        * @param color int,椭圆线框的颜色。
+        * @return 无返回值。
+        */
+	   void DrawEllipse(float x,float y ,float xradius,   float yradius , int color) ;
+	   /**
+        * 画实心椭圆的函数。
+        * @param x float,圆心的顶点的x坐标。
+		* @param y float,圆心的顶点的y坐标。
+		* @param xradius float ,椭圆x的半径。
+		* @param yradius float ,椭圆y的半径。
+        * @param color int,实心椭圆的颜色。
+        * @return 无返回值。
+        */
+	   void FillEllipse(float x,float y ,float xradius,   float yradius , int color) ;
+	   
+	   void FillPie(float x, float y, float radius,float theta, int color);
+	   /**
+        * 画实心凸多边形的函数。
+        * @param array CPointf*,凸多边形的顶点数组。
+        * @param color int,凸多边形的颜色。
+        * @return 无返回值。
+        */
+	   void FillPolygon(CPointf* array, int count, int color);
+	   /**
+        * 画凸多边形线框的函数。
+        * @param CPointf* array,凸多边形的顶点数组。
+        * @param color int,凸多边形线框的颜色。
+        * @return 无返回值。
+        */
+	   void DrawPolygon(CPointf* array, int count, int color);
+	   void FillRoundRect(float x, float y, float w, float h, float radius, int color);
 private:
 	int m_colorint;
 	color4f m_clrcolor;
+	float m_sintable[360];
+	float m_costable[360];
 	int m_update;
 	int m_frame;
 	int m_t0;

@@ -87,10 +87,11 @@ typedef struct{
 	float r;
 	float g;
 	float b;
-	flaot a;
+	float a;
 }color4f;
 
-
+#define RAD2DEG		57.29577951f
+#define DEG2RAD		0.017453293f
 /**
  *  @brief A type definition for point .
  */
@@ -101,14 +102,16 @@ typedef struct {
 
 /**
  * @brief A type definition for rectagle
+ * (top ,left)  .-----------
+ *              |          |
+ *              -----------.(right ,bottom)
  */
-typedef struct
+struct CRectf
 {
-	float top;    /**< top of rect. */
-	float left;   /**< left of rect. */
-	float right;  /**< right of rect. */
-	float bottom; /**< bottom of rect. */
-}CRectf;
+	CPointf topleft;    /**< top of rect. */
+	CPointf rightbottom; /**< bottom of rect. */
+	CRectf( CPointf topLeft, CPointf bottomRight ){topleft =topLeft;rightbottom = bottomRight; }; 
+};
 
 
 /**
