@@ -35,4 +35,27 @@
 #define DISPLAY_WIDTH 480
 #define DISPLAY_HEIGHT 272
 
+//draw
+#define XSCALE 1.0 
+#define YSCALE 1.0
+#define ANGLE  0.0
+#define DEFAULTCOLOR 0xffffffff  
+
+
+struct _RECT
+{
+	int left;
+	int top;
+	int width;
+	int height;
+	_RECT(int l, int t ,int w, int h)
+	{
+		left = l;
+		top = t;
+		width = w;
+		height = h;
+	}
+};
+
+
 #endif

@@ -55,7 +55,6 @@ public:
 	void ScrollMap(int nOffsetX,int nOffsetY);
 	bool NewMap(int nRows,int nCols);
 	bool SetMapCell(int nRow, int nCol, stCell cell);
-	void CalcSourceXY(	CTexture* pTexture,int nMapX, int nMapY, int& nSourceX, int& nSourceY);	//calc source x, y 
 
 	CTexture* GetMapTexture(int nIndex);
 	CTexture* GetBackGroundTexture()

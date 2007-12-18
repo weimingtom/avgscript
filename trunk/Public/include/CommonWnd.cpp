@@ -2,6 +2,11 @@
 
 CCommonWnd::CCommonWnd()
 {
+	m_pParent = m_pChild = m_pNext = m_pPrev = NULL;
+	m_pVideoDriver = NULL;
+	m_pBackTexture = NULL;
+	m_nDisplayLeft = m_nDisplayTop = 0;
+	m_nWidth = m_nHeight = m_nLeft = m_nTop = 0;
 
 }
 CCommonWnd::~CCommonWnd()
@@ -12,7 +17,8 @@ CCommonWnd::~CCommonWnd()
 
 IVideoDriver* CCommonWnd::GetVideoDriver() const
 {
-	return m_pVideoDriver;
+	return ::GetVideoDriver();
+//	return m_pVideoDriver;
 }
 
 int CCommonWnd::GetWidth() const
@@ -63,7 +69,22 @@ CCommonWnd* CCommonWnd::GetPrev() const
 {
 	return m_pPrev;
 }
-
+int CCommonWnd::GetDisplayTop() const
+{
+	return m_nDisplayTop;
+}
+int CCommonWnd::GetDisplayLeft() const
+{
+	return m_nDisplayLeft;
+}
+void CCommonWnd::SetDisplayTop(int nTop)
+{
+	m_nDisplayTop = nTop;
+}
+void CCommonWnd::SetDisplayLeft(int nLeft)
+{
+	m_nDisplayLeft = nLeft;
+}
 void  CCommonWnd::SetParent(CCommonWnd* pParent)
 {
 	m_pParent = pParent;
@@ -95,13 +116,75 @@ CTexture* CCommonWnd::GetTexture() const
 	return m_pBackTexture;
 }
 
-
-void CCommonWnd::Draw() 
+bool  CCommonWnd::IsPtInArea(int x, int y) const
 {
-	//draw background texture
-//	m_pVideoDriver->RenderQuad(m_pBackTexture,  )
+	//x  ,y is display pos
+	if( m_nDisplayLeft < x &&
+		x < m_nDisplayLeft+m_nWidth&&
+		m_nDisplayTop < y &&
+		y < m_nDisplayTop+m_nHeight)
+	{
+		return true;
+	}
+	return false;
+}
+void CCommonWnd::Release()
+{
+	//delete his all child
+
+	CCommonWnd* pChild;
+	pChild = GetChild();
+	while(pChild)
+	{
+		pChild->Release();
+		pChild = pChild->GetNext();
+	}
+
+	//delete his self
+	delete this;
+	
+}
+
+void CCommonWnd::Draw(_RECT rect) 
+{
+	
+	//draw his child
+
+	CCommonWnd* pChild;
+	pChild = GetChild();
+//	if(pChild==NULL)
+//	return;
+//
+	while(pChild)
+	{
+		pChild->Draw();
+		pChild = pChild->GetNext();
+	}
+
+
+
 
 }
+void CCommonWnd::Move(int nOffsetX, int nOffsetY) 
+{
+	m_nLeft+=nOffsetX;
+	m_nTop +=nOffsetY;
+
+	m_nDisplayLeft +=nOffsetX;
+	m_nDisplayTop +=nOffsetY;
+
+	
+}
+void CCommonWnd::MouseMove(int x , int y)
+{
+}
+void CCommonWnd::MouseDown(int x, int y)
+{
+}
+void CCommonWnd::MouseUp(int x, int y)
+{
+}
+
 
 
 #ifdef _TEST_ 
