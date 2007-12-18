@@ -341,10 +341,7 @@ CTexture* CMap::GetMapTexture(int nIndex)
 }
 
 
-void CMap::CalcSourceXY(	CTexture* pTexture,int nMapX, int nMapY, int& nSourceX, int& nSourceY)
-{
-	
-}
+
 #ifdef _TEST_
 void CMap::Test()
 {

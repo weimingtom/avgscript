@@ -25,7 +25,6 @@ public:
 	
 	bool Open(const char* pszFileName);
 	bool IsOpen()	{return m_bOpen;}
-	int GetFileLength(const char *pszFileName);
 
 
 	//Get int key example: 
@@ -37,12 +36,14 @@ public:
 				const char* pszDefault,
 				char* szBuf, int nBufLen);
 
+
+private:
+	int GetFileLength(const char *pszFileName);
 	int  FindIndex(const char* pszIndex);
 	int  FindKey(const char* pszKey, int nStartPos=0);
 	bool GetValue(int nPos, char* pszBuf, int nBufLen,int* pRet=NULL);	
 	void TrimSpace(char* pszBuf);
 
-private:
 	bool		m_bOpen;
 	char*	    m_pData;
 	int         m_nDateLen;

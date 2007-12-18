@@ -11,13 +11,16 @@
 #define _GLOBAL_H_
 
 #include "libnge.h"
-
+#include "def.h"
 //variable
+class CWndManage;
 
 extern IVideoDriver* g_pVideoDriver;
-
+extern CWndManage    g_WndManage;
 
 IVideoDriver* GetVideoDriver();
+
+void Update(_RECT rect = _RECT(0,0,0,0));
 
 
 

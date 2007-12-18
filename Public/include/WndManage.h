@@ -22,6 +22,7 @@ public:
 	bool DelWnd(CCommonWnd* pWnd);
 	void ChangeCurWnd(CCommonWnd* pWnd);	
 
+	void Draw(_RECT rect);						//draw all wnd object, rect is redraw area
 private:
 
 	CCommonWnd* GetLastWnd(CCommonWnd* pWnd);	//get the last wnd 

@@ -1,11 +1,40 @@
 #include "WndManage.h"
 
 
+CWndManage::CWndManage()
+{
+	//create top wnd ,all wnd 's parent
+
+	m_pTopParnetWnd = new CCommonWnd();
+	m_pCurParentWnd = m_pTopParnetWnd;
+
+}
+CWndManage::~CWndManage()
+{
+	if(m_pTopParnetWnd)
+	{
+
+		//delete all his child
+
+		
+		delete m_pTopParnetWnd;
+
+		
+	}
+
+
+
+
+}
+
 bool CWndManage::AddWnd(CCommonWnd* pWnd)
 {
 
 
 	//add as m_pCurParentWnd 's child
+
+	if(m_pCurParentWnd==NULL)
+		return false;
 
 	if(m_pCurParentWnd->GetChild()==NULL)
 	{
@@ -77,4 +106,16 @@ CCommonWnd* CWndManage::GetLastWnd(CCommonWnd* pWnd)
 		pWnd = pWnd->GetNext();
 	}
 	return pWnd;
+}
+
+
+void CWndManage::Draw(_RECT rect)
+{
+	//draw object in the rect
+
+	m_pTopParnetWnd->Draw();
+	
+
+
+	
 }

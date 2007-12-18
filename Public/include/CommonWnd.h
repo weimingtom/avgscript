@@ -24,11 +24,15 @@ public:
 	int GetHeight() const;
 	int GetLeft() const;
 	int GetTop() const;
+	int GetDisplayTop() const;
+	int GetDisplayLeft() const;
 
 	void SetWidth(int nWidth);
 	void SetHeight(int nHeight);
 	void SetLeft(int nLeft);
 	void SetTop(int nTop);
+	void SetDisplayTop(int nTop);
+	void SetDisplayLeft(int nLeft);
 	
 	CCommonWnd* GetParent() const;
 	CCommonWnd* GetChild()  const;
@@ -38,14 +42,21 @@ public:
 	void  SetChild(CCommonWnd* pChild);
 	void  SetNext(CCommonWnd* pNext);
 	void  SetPrev(CCommonWnd* pPrev);
-	bool CreateTexture(const char* pszFileName);
 	CTexture* GetTexture() const;
+	bool  IsPtInArea(int x, int y) const;
 
 
 
 	//virtual function
-	virtual void Draw() ;
+	virtual bool CreateTexture(const char* pszFileName);
+	virtual void Release();
 
+	virtual void Draw(_RECT rect = _RECT(0,0,0,0)) ;
+	virtual void Move(int nOffsetX, int nOffsetY) ;
+	//mouse
+	virtual void MouseMove(int x , int y);
+	virtual void MouseDown(int x, int y);
+	virtual void MouseUp(int x, int y);
 
 #ifdef _TEST_ 
 	virtual void Test() ;	
@@ -55,9 +66,11 @@ private:
 
 	int			  m_nWidth;			
 	int           m_nHeight;
-	int           m_nLeft;
+	int           m_nLeft;		//this left and top is relate to his parent
 	int           m_nTop;
 
+	int           m_nDisplayLeft;
+	int           m_nDisplayTop;	//this is relate to display
 
 	CCommonWnd*   m_pParent;
 	CCommonWnd*   m_pChild;
