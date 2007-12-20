@@ -28,3 +28,24 @@ void MouseUp(int x, int y)
 {
 	g_WndManage.MouseUp(x,y);
 }
+
+void Drag(int x, int y, int nNextDragStatus)
+{
+
+	
+	g_WndManage.Drag(x, y, nNextDragStatus);
+}
+
+
+bool IsPtInRect(int x, int y,_RECT rect)
+{
+	if( rect.left < x && 
+		x <rect.left + rect.width  &&
+		rect.top < y &&
+		y < rect.top + rect.height)
+	{
+		return true;
+	}
+	else
+		return false;
+}

@@ -22,8 +22,13 @@ public:
 	~CDlg();
 
 	
+	virtual bool CreateTexture(const char* pszFileName);
 
-	virtual void Draw();
+	virtual void Draw(_RECT rect=_RECT(0,0,0,0));
+//	virtual void DragStart();
+//	virtual void DragIng();
+	virtual void Drag(int x, int y,int nNextDragStatus);
+	virtual bool IsPtInDragArea(int x, int y) const;
 
 #ifdef _TEST_ 
 	virtual void Test();	
@@ -31,7 +36,7 @@ public:
 
 private:
 	
-
+	_RECT m_DragArea;	//this coordinate is relative this dlg 
 	
 
 };

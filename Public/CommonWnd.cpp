@@ -7,7 +7,10 @@ CCommonWnd::CCommonWnd()
 	m_pBackTexture = NULL;
 	m_nDisplayLeft = m_nDisplayTop = 0;
 	m_nWidth = m_nHeight = m_nLeft = m_nTop = 0;
-
+	m_nDragStatus = Drag_Status_None;
+	SetIsContainer(false);
+	SetCanMove(true);
+	SetCanDrag(true);
 }
 CCommonWnd::~CCommonWnd()
 {
@@ -77,6 +80,12 @@ int CCommonWnd::GetDisplayLeft() const
 {
 	return m_nDisplayLeft;
 }
+
+
+int CCommonWnd::GetZorder() const
+{
+	return m_nZorder;
+}
 void CCommonWnd::SetDisplayTop(int nTop)
 {
 	m_nDisplayTop = nTop;
@@ -101,6 +110,29 @@ void  CCommonWnd::SetPrev(CCommonWnd* pPrev)
 {
 	m_pPrev = pPrev;
 }
+
+void CCommonWnd::SetCanMove(bool bCanMove)
+{
+	m_bCanMove = bCanMove;
+}
+bool CCommonWnd::GetCanMove() const
+{
+	return m_bCanMove;
+}
+
+int CCommonWnd::GetAlpha() const
+{
+	return m_nAlpha;
+}
+void CCommonWnd::SetAlpha(int nAlpha)
+{
+	m_nAlpha = nAlpha;
+}
+void CCommonWnd::SetZOrder(int nZOrder)
+{
+	m_nZorder = nZOrder;
+}
+
 bool CCommonWnd::CreateTexture(const char* pszFileName)
 {
 	if(pszFileName==NULL)
@@ -127,6 +159,11 @@ bool  CCommonWnd::IsPtInArea(int x, int y) const
 		return true;
 	}
 	return false;
+}
+
+bool  CCommonWnd::IsKindOf(const char* pszKindName) const
+{
+	return true;
 }
 void CCommonWnd::Release()
 {
@@ -167,16 +204,118 @@ void CCommonWnd::Draw(_RECT rect)
 }
 void CCommonWnd::Move(int nOffsetX, int nOffsetY) 
 {
+	if(!GetCanMove())
+		return;
 	m_nLeft+=nOffsetX;
 	m_nTop +=nOffsetY;
 
 	m_nDisplayLeft +=nOffsetX;
 	m_nDisplayTop +=nOffsetY;
 
+	//move all his child
+	CCommonWnd* pChild;
+	pChild = GetChild();
+	while(pChild)
+	{
+		pChild->Move(nOffsetX, nOffsetY);
+		pChild = pChild->GetNext();
+	}
+}
+/*
+void CCommonWnd::DragStart(int x, int y)
+{
+}
+void CCommonWnd::DragIng(int x, int y)
+{
+}*/
+
+bool CCommonWnd::GetCanDrag() const
+{
+	return m_bCanDrag;
+}
+void CCommonWnd::SetCanDrag(bool bCanDrag)
+{
+	m_bCanDrag = bCanDrag;
+}
+void CCommonWnd::Drag(int x, int y, int nNextDragStatus)
+{
+	if(!GetCanDrag())
+		return;
+	if(!CCommonWnd::IsPtInDragArea(x, y))
+		return;
+	switch(m_nDragStatus)
+	{
+	case Drag_Status_None:
+		{
+			if(nNextDragStatus == Drag_Status_Starting)
+			{
+				//start drag 
+				m_nStartDragX = x;
+				m_nStartDragY = y;
+				ChangeDragStatus(Drag_Status_Starting);
+			}
+		}
+		break;
+	case Drag_Status_Starting:
+		{
+			if(nNextDragStatus==Drag_Status_Starting)
+			{
+				//Move wnd
+				Move(x-m_nStartDragX, y - m_nStartDragY);
+				m_nStartDragX = x;
+				m_nStartDragY = y;
+				
+			}
+			else if(nNextDragStatus = Drag_Status_None)
+			{
+				ChangeDragStatus(Drag_Status_None);
+			}
+		}
+		break;
+	//case Drag_Status_End:
+	//	{
+	//		if(nNextDragStatus = Drag_Status_Starting)
+	//		{
+	//			ChangeDragStatus(Drag_Status_None);
+	//		}
+	//	}
+	//	break;
+	}
+/*
+	//ok now we drag all his child
+	CCommonWnd* pWnd;
+	pWnd = GetChild();
+	while(pWnd)
+	{
+		pWnd->Drag(x, y, nNextDragStatus);
+		pWnd = pWnd->GetNext();
+	}*/
 	
 }
+bool  CCommonWnd::IsPtInDragArea(int x, int y) const
+{
+	return IsPtInArea(x, y);
+}
+
+bool CCommonWnd::GetIsContainer() const
+{
+	return m_bContainer;
+}
+void CCommonWnd::SetIsContainer(bool bContainer)
+{
+	m_bContainer = bContainer;
+}
+
+void CCommonWnd::ChangeDragStatus(int nNextStatus)
+{
+	m_nDragStatus = nNextStatus;
+}
+
 void CCommonWnd::MouseMove(int x , int y)
 {
+
+	//in here ,we do not need to do anything ,so we MouseMove all his child,
+	//if his child inherit CCommonWnd , implement in child class MouseMove ,do that
 
 	//all his child
 	CCommonWnd* pWnd;
@@ -191,6 +330,7 @@ void CCommonWnd::MouseMove(int x , int y)
 }
 void CCommonWnd::MouseDown(int x, int y)
 {
+	/*
 	//all his child
 	CCommonWnd* pWnd;
 	pWnd = GetChild();
@@ -198,7 +338,7 @@ void CCommonWnd::MouseDown(int x, int y)
 	{
 		pWnd->MouseDown(x, y);
 		pWnd = pWnd->GetNext();
-	}
+	}*/
 }
 void CCommonWnd::MouseUp(int x, int y)
 {
@@ -212,6 +352,13 @@ void CCommonWnd::MouseUp(int x, int y)
 	}	
 }
 
+bool CCommonWnd::HitTest(int x ,int y)
+{
+	//all CCommonWnd have a z-order ,hit test return the top CCommonWnd object
+	
+	
+	return IsPtInArea(x,y);
+}
 
 
 #ifdef _TEST_ 

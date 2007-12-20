@@ -11,6 +11,11 @@
 #define _COMMONWND_H_
 #include "Global.h"
 
+
+#define Drag_Status_None 1
+#define Drag_Status_Starting 2
+
+
 class CCommonWnd
 {
 public:
@@ -26,6 +31,11 @@ public:
 	int GetTop() const;
 	int GetDisplayTop() const;
 	int GetDisplayLeft() const;
+	int GetAlpha() const;
+	int GetZorder() const;
+	bool GetIsContainer() const;
+	bool GetCanMove() const;
+	bool GetCanDrag() const;
 
 	void SetWidth(int nWidth);
 	void SetHeight(int nHeight);
@@ -33,7 +43,9 @@ public:
 	void SetTop(int nTop);
 	void SetDisplayTop(int nTop);
 	void SetDisplayLeft(int nLeft);
-	
+	void SetAlpha(int nAlpha);
+	void SetZOrder(int nZOrder);
+	void SetIsContainer(bool bContainer);
 	CCommonWnd* GetParent() const;
 	CCommonWnd* GetChild()  const;
 	CCommonWnd* GetNext() const;
@@ -42,22 +54,35 @@ public:
 	void  SetChild(CCommonWnd* pChild);
 	void  SetNext(CCommonWnd* pNext);
 	void  SetPrev(CCommonWnd* pPrev);
+
+	void SetCanMove(bool bCanMove);
+	void SetCanDrag(bool bCanDrag);
 	CTexture* GetTexture() const;
 	bool  IsPtInArea(int x, int y) const;
+	bool  IsKindOf(const char* pszKindName) const;
 
+	void ChangeDragStatus(int nNextStatus);
 
 
 	//virtual function
 	virtual bool CreateTexture(const char* pszFileName);
 	virtual void Release();
+	virtual bool IsPtInDragArea(int x, int y) const;
 
 	virtual void Draw(_RECT rect = _RECT(0,0,0,0)) ;
 	virtual void Move(int nOffsetX, int nOffsetY) ;
+	
+//	virtual void DragStart(int x, int y);
+//	virtual void DragIng(int x, int y);
+	virtual void Drag(int x, int y, int nNextDragStatus);
 	//mouse
 	virtual void MouseMove(int x , int y);
 	virtual void MouseDown(int x, int y);
 	virtual void MouseUp(int x, int y);
 
+
+	//hit test
+	virtual bool HitTest(int x ,int y);
 #ifdef _TEST_ 
 	virtual void Test() ;	
 #endif
@@ -71,7 +96,15 @@ private:
 
 	int           m_nDisplayLeft;
 	int           m_nDisplayTop;	//this is relate to display
+	int			  m_nAlpha;
+	int           m_nDragStatus;	
+	int           m_nStartDragX;
+	int           m_nStartDragY;
 
+	int           m_nZorder;		//z-order 
+	bool          m_bContainer;		//
+	bool          m_bCanMove;
+	bool          m_bCanDrag;
 	CCommonWnd*   m_pParent;
 	CCommonWnd*   m_pChild;
 	CCommonWnd*   m_pNext;

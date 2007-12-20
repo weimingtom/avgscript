@@ -25,7 +25,7 @@ void MouseMove(int x, int y);
 void MouseDown(int x, int y);
 void MouseUp(int x, int y);
 
-
-
+void Drag(int x, int y, int nNextDragStatus);
+bool IsPtInRect(int x, int y, _RECT rect);
 
 #endif
