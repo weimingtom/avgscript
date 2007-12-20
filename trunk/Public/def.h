@@ -41,6 +41,7 @@
 #define ANGLE  0.0
 #define DEFAULTCOLOR 0xffffffff  
 
+#define MAX_Z_ORDER 99999 
 
 struct _RECT
 {

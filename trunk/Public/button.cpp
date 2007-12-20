@@ -20,6 +20,8 @@ bool Cbutton::CreateTexture(const char* pszFileName)
 
  	SetWidth(GetTexture()->w / BUTTON_STATUS_COUNT);
 	SetHeight(GetTexture()->h);
+//	SetCanMove(false);
+	SetCanDrag(false);
 	return true;
 	
 }
@@ -43,7 +45,7 @@ void Cbutton::Draw(_RECT rect)
 }
 void Cbutton::Move(int nOffsetX, int nOffsetY)
 {
-	
+	CCommonWnd::Move(nOffsetX, nOffsetY);
 }
 void Cbutton::MouseMove(int x , int y)
 {
@@ -81,10 +83,6 @@ void Cbutton::ChangeStatue(int nNextStatus)
 	m_nButtonStatus = nNextStatus;
 }
 
-void Cbutton::SetAlpha(int nAlpha)
-{
-	m_nAlpha = nAlpha;
-}
 
 
 #ifdef _TEST_

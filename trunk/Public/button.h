@@ -25,7 +25,6 @@ public:
 	~Cbutton();
 
 	void ChangeStatue(int nNextStatus);
-	void SetAlpha(int nAlpha);
 	
 	virtual bool CreateTexture(const char* pszFileName);
 	virtual void Draw(_RECT rect = _RECT(0,0,0,0)) ;
@@ -42,7 +41,6 @@ private:
 
 
 	int m_nButtonStatus;
-	int m_nAlpha;
 };
 
 
