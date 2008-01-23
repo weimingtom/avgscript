@@ -11,6 +11,7 @@ CCommonWnd::CCommonWnd()
 	SetIsContainer(false);
 	SetCanMove(true);
 	SetCanDrag(true);
+	m_nAlpha = 0xffffffff;
 }
 CCommonWnd::~CCommonWnd()
 {
@@ -141,6 +142,16 @@ const char* CCommonWnd::GetWndCaption() const
 {
 	return m_szWndCaption;
 }
+
+const char* CCommonWnd::GetWndTextureFileName() const
+{
+	return m_szWndTextureFileName;
+}
+const char* CCommonWnd::GetWndSZKind() const
+{
+	return m_szWndKind;
+}
+
 void CCommonWnd::SetWndName(const char* pszWndName)
 {
 	if(pszWndName==NULL||strlen(pszWndName)>MAX_WND_NAME_LEN)
@@ -154,6 +165,20 @@ void CCommonWnd::SetWndCaption(const char* pszWndCaption)
 	strcpy(m_szWndCaption, pszWndCaption);
 }
 
+void CCommonWnd::SetWndTextureFileName(const char* pszTextureFileName)
+{
+	if(pszTextureFileName==NULL||strlen(pszTextureFileName)>MAX_WND_NAME_LEN)
+		return;
+	strcpy(m_szWndTextureFileName, pszTextureFileName);
+
+}
+void CCommonWnd::SetWndSZKind(const char* pszKind)
+{
+	if(pszKind==NULL||strlen(pszKind)>MAX_WND_NAME_LEN)
+		return;
+	strcpy(m_szWndKind, pszKind);
+
+}
 bool CCommonWnd::CreateTexture(const char* pszFileName)
 {
 	if(pszFileName==NULL)

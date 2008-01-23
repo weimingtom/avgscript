@@ -1,6 +1,6 @@
 #include "Global.h"
 #include "WndManage.h"
-
+#include "libwnd.h"
 
 CWndManage    g_WndManage;
 IVideoDriver* g_pVideoDriver;
@@ -29,6 +29,7 @@ void MouseUp(int x, int y)
 	g_WndManage.MouseUp(x,y);
 }
 
+
 void Drag(int x, int y, int nNextDragStatus)
 {
 
@@ -48,4 +49,15 @@ bool IsPtInRect(int x, int y,_RECT rect)
 	}
 	else
 		return false;
+}
+
+
+bool LoadWnd(const char* pszFileName)
+{
+	return g_WndManage.LoadWnd(pszFileName);
+}
+
+bool SaveWnd(const char* pszFileName)
+{
+	return g_WndManage.SaveWnd(pszFileName);
 }
