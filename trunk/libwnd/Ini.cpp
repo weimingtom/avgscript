@@ -15,6 +15,39 @@ CIni::~CIni()
 	if(m_bOpen && m_pData!=NULL)
 		delete [] m_pData;
 
+
+	//delete 
+
+	if(m_pFirstIndex)
+	{
+
+		STIndex* pIndex;
+		STIndex* pNextIndex;
+		pIndex = m_pFirstIndex;
+		while(pIndex)
+		{
+			pNextIndex = pIndex->pNextIndex;
+
+			//delete all his key 
+			STKey* pKey;
+			pKey = pIndex->pFirstKey;
+			while(pKey)
+			{
+				STKey* pNextKey;
+				pNextKey = pKey->pNextKey;
+				//delete current key
+				delete pKey;
+				//next key
+				pKey = pNextKey;
+			}
+			//delete current index
+			delete pIndex;
+			//move to next index
+			pIndex = pNextIndex;
+		}
+
+	}
+
 }
 
 
@@ -220,6 +253,14 @@ bool CIni::SetKeyAndValue(const char* psz)
 
 	return false;
 }
+
+void CIni::AddKeyAndValue(const char* pszKey, int nValue)
+{
+	char szValue[MAX_VALUE_BUF_LEN];
+	sprintf(szValue, "%d", nValue);
+	AddKeyAndValue(pszKey, szValue);
+}
+
 void CIni::AddKeyAndValue(const char* pszKey,const char* pszValue )
 {
 	STKey* pKey = new STKey();

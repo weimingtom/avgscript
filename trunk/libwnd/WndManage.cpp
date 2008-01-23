@@ -153,9 +153,12 @@ bool CWndManage::LoadWnd(const char* pszFileName)
 		//get wnd kind 
 		char szKind[MAX_WND_VALUE_LEN]={0};
 		ini.GetStr(szIndex, Wnd_Key_Kind,szWndKind_UnKnown, szKind, MAX_WND_VALUE_LEN);
+
+		
 		int nKind;
 		nKind = szKindToIntKind(szKind);
 
+		
 		
 		CCommonWnd* pWnd = NULL;
 		switch(nKind)
@@ -188,8 +191,10 @@ bool CWndManage::LoadWnd(const char* pszFileName)
 		pWnd->SetWndName(szWndName);
 		pWnd->SetWndCaption(szWndCaption);
 		pWnd->CreateTexture(szTextureFile);
-
+		pWnd->SetWndSZKind(szKind);
+		pWnd->SetWndTextureFileName(szTextureFile);
 		AddWnd(pWnd);
+		m_nWndCount++;
 		
 	}
 
@@ -201,9 +206,78 @@ bool CWndManage::SaveWnd(const char* pszFileName)
 {
 	if(pszFileName==NULL)
 		return false;
+	CIni ini;
+
+	//save wnd count 
+	ini.AddIndex(Wnd_Index);
+	ini.AddKeyAndValue(Wnd_Key_Count, m_nWndCount);
+
+
+	SaveWnd(m_pTopParnetWnd, &ini);
+	
+	//save to file
+	ini.Save(pszFileName);
 
 	return true;
 }
+
+
+void CWndManage::SaveWnd(CCommonWnd* pWnd,CIni* pIni)
+{
+	
+	if(pWnd==NULL)
+		return;
+
+
+	while(pWnd)
+	{
+		//save him first
+
+		SaveOneWnd(pWnd, pIni);
+
+		//save his child
+		CCommonWnd* pChild;
+		pChild = pWnd->GetChild();
+		//recrusion
+		SaveWnd(pChild, pIni);
+		//his next brother
+		pWnd =  pWnd->GetNext();
+	}
+}
+
+void CWndManage::SaveOneWnd(CCommonWnd* pWnd,CIni* pIni)
+{
+	if(pWnd==NULL)
+		return;
+
+	//format index ,e.g  "Wnd0"
+
+	char szIndex[MAX_INDEX_LEN];
+
+	sprintf(szIndex, "%s%d", Wnd_Index, m_nSaveCount);
+	pIni->AddIndex(szIndex);
+
+	//key and value
+
+	pIni->AddKeyAndValue(Wnd_Key_Name, pWnd->GetWndName());
+	pIni->AddKeyAndValue(Wnd_Key_Caption, pWnd->GetWndCaption());
+	pIni->AddKeyAndValue(Wnd_Key_TextureFile, pWnd->GetWndTextureFileName());
+	pIni->AddKeyAndValue(Wnd_Key_ID, pWnd->GetID());
+	pIni->AddKeyAndValue(Wnd_Key_X, pWnd->GetDisplayLeft());
+	pIni->AddKeyAndValue(Wnd_Key_Y, pWnd->GetDisplayTop());
+	pIni->AddKeyAndValue(Wnd_Key_Width, pWnd->GetWidth());
+	pIni->AddKeyAndValue(Wnd_Key_Height, pWnd->GetHeight());
+	pIni->AddKeyAndValue(Wnd_Key_CanDrag, pWnd->GetCanDrag());
+	pIni->AddKeyAndValue(Wnd_Key_CanMove, pWnd->GetCanMove());
+	pIni->AddKeyAndValue(Wnd_Key_Kind, pWnd->GetWndSZKind());
+
+	
+	//do not forget index count++
+	m_nSaveCount++;
+
+
+}
+
 
 int CWndManage::szKindToIntKind(const char* pszKind)
 {
@@ -211,25 +285,25 @@ int CWndManage::szKindToIntKind(const char* pszKind)
 		return WndKind_UnKnown;
 	
 	int nRet = WndKind_UnKnown;
-	if(strcmp(pszKind, szWndKind_UnKnown))
+	if(strcmp(pszKind, szWndKind_UnKnown)==0)
 		nRet = WndKind_UnKnown;
-	else if(strcmp(pszKind, szWndKind_Dlg))
+	else if(strcmp(pszKind, szWndKind_Dlg)==0)
 		nRet = WndKind_Dlg;
-	else if(strcmp(pszKind, szWndKind_Button))
+	else if(strcmp(pszKind, szWndKind_Button)==0)
 		nRet = WndKind_Button;
-	else if(strcmp(pszKind, szWndKind_Text))
+	else if(strcmp(pszKind, szWndKind_Text)==0)
 		nRet = WndKind_Text;
-	else if(strcmp(pszKind, szWndKind_Combo))
+	else if(strcmp(pszKind, szWndKind_Combo)==0)
 		nRet = WndKind_Combo;
-	else if(strcmp(pszKind, szWndKind_Scroll))
+	else if(strcmp(pszKind, szWndKind_Scroll)==0)
 		nRet = WndKind_Scroll;
-	else if(strcmp(pszKind, szWndKind_Menu))
+	else if(strcmp(pszKind, szWndKind_Menu)==0)
 		nRet = WndKind_Menu;
-	else if(strcmp(pszKind, szWndKind_List))
+	else if(strcmp(pszKind, szWndKind_List)==0)
 		nRet = WndKind_List;
-	else if(strcmp(pszKind, szWndKind_Radio))
+	else if(strcmp(pszKind, szWndKind_Radio)==0)
 		nRet = WndKind_Radio;
-	else if(strcmp(pszKind, szWndKind_CheckBox))
+	else if(strcmp(pszKind, szWndKind_CheckBox)==0)
 		nRet = WndKind_CheckBox;
 	return nRet;
 }
@@ -430,4 +504,14 @@ void CWndManage::ActiveWnd(CCommonWnd* pWnd)
 		ChangeCurWnd(pWnd);
 
 	}
+}
+
+
+int CWndManage::GetWndCount() const
+{
+	return m_nWndCount;
+}
+void CWndManage::SetWndCount(int nWndCount)
+{
+	m_nWndCount = nWndCount;
 }
