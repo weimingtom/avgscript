@@ -84,12 +84,14 @@ public:
 	void SetInt(const char* pszIndex, const char* pszKey, int nValue);
 	void SetStr(const char* pszIndex, const char* pszKey,const char* pszValue);
 
+	void AddKeyAndValue(const char* pszKey,const char* pszValue );
+	void AddKeyAndValue(const char* pszKey, int nValue);
+	void AddIndex(const char* pszIndex);
+
 private:
 	void Init();
 	bool SetIndex(const char* psz);
-	void AddIndex(const char* pszIndex);
 	bool SetKeyAndValue(const char* psz);
-	void AddKeyAndValue(const char* pszKey,const char* pszValue );
 
 	STIndex* GetLastIndex();
 	

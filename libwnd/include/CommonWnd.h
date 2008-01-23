@@ -41,8 +41,13 @@ public:
 	bool GetCanDrag() const;
 	const char* GetWndName() const;
 	const char* GetWndCaption() const;
+	const char* GetWndTextureFileName() const;
+	const char* GetWndSZKind() const;
 	void SetWndName(const char* pszWndName);
 	void SetWndCaption(const char* pszWndCaption);
+
+	void SetWndTextureFileName(const char* pszTextureFileName);
+	void SetWndSZKind(const char* pszKind);
 	void SetWidth(int nWidth);
 	void SetHeight(int nHeight);
 	void SetLeft(int nLeft);
@@ -120,6 +125,8 @@ private:
 
 	char          m_szWndName[MAX_WND_NAME_LEN];
 	char          m_szWndCaption[MAX_WND_NAME_LEN];
+	char          m_szWndTextureFileName[MAX_WND_NAME_LEN];
+	char          m_szWndKind[MAX_WND_NAME_LEN];
 };
 
 #endif
