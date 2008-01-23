@@ -22,4 +22,6 @@ IVideoDriver* GetVideoDriver();
 
 bool IsPtInRect(int x, int y, _RECT rect);
 
+
+
 #endif

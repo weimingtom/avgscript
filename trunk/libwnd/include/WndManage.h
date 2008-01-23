@@ -10,7 +10,7 @@
 #ifndef _WNDMANAGE_H_
 #define _WNDMANAGE_H_
 #include "CommonWnd.h"
-
+#include "Ini.h"
 
 #define MAX_WND_VALUE_LEN 256	//max value len in xxx.ini file
 #define Wnd_Default_IntValue 0xffffff  
@@ -89,9 +89,14 @@ public:
 	bool LoadWnd(const char* pszFileName);		//load script from file
 	
 	bool SaveWnd(const char* pszFileName);		//save to file
+
+	int GetWndCount() const;
+	void SetWndCount(int nWndCount);
 private:
 
+	void SaveWnd(CCommonWnd* pWnd,CIni* pIni);
 
+	void SaveOneWnd(CCommonWnd* pWnd,CIni* pIni);
 	int szKindToIntKind(const char* pszKind);	//change str kind to int kind
 
 	CCommonWnd* GetLastWnd(CCommonWnd* pWnd);	//get the last wnd 
@@ -99,7 +104,10 @@ private:
 	CCommonWnd* m_pTopParnetWnd;				//all CCommonWnd object's parent 
 	CCommonWnd* m_pCurParentWnd;				//current  Parent CCommonWnd 
 
-	CCommonWnd* m_pActiveWnd;					
+	CCommonWnd* m_pActiveWnd;		
+	
+	int         m_nSaveCount;					//save wnd index count 
+	int         m_nWndCount;
 };
 
 #endif
